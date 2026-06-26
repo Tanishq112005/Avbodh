@@ -9,17 +9,14 @@
      border-radius: 20px;
      margin-left: 10px;
      background-color: var(--background-color);
-     transition: width ease 1sec;
+     transition: width ease 0.25s;
 }
 
-.collapsedSideBar {
-    width : 70px; 
-}
 
 .logo {
     display: flex;
     flex-direction: row;
-    gap: 100px ; 
+    gap: 110px ; 
     padding-op: 0.5rem ;  
     padding-bottom: 1rem ; 
     align-items: center;
@@ -46,11 +43,19 @@
 }
 
 
-.collapsedSideBar {
+.closedSideBar {
     display: flex;
     flex-direction: column;
     padding: 1rem;       /* Keeps the icon away from the exact edge of the screen */
     align-items: center; /* Centers the icon */
+    height: 100% ;
+    width: 50px ; 
+    background-color: #1F1F1F;
+    height: 95% ; 
+     border-radius: 20px;
+     margin-left: 10px;
+     transition: width ease 0.25s;
+
 }
 
 
