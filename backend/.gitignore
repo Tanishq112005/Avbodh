@@ -1,0 +1,17 @@
+node_modules
+# Keep environment variables out of version control
+.env
+
+venv/
+.venv/
+env/
+
+# 2. Hide your secrets (Never upload database URLs or API keys!)
+.env
+
+# 3. Hide Python's compiled cache files (Python generates these automatically)
+__pycache__/
+*.pyc
+
+# 4. Hide Prisma's generated files (Optional, but good practice)
+.prisma/
