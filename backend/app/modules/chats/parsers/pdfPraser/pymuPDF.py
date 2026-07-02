@@ -1,5 +1,5 @@
 import fitz  # PyMuPDF
-from app.modules.chats.parsers.interfaces import IFileParser
+from app.modules.chats.parsers.pdfPraser.interfaces import IFileParser
 
 class PDFParser(IFileParser):
     async def parse(self, file_path: str) -> str:

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any
 
-class IFileParser(ABC):
+class IPdfParser(ABC):
     
     
     @abstractmethod

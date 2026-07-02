@@ -1,6 +1,6 @@
 import base64
 import aiofiles
-from app.modules.chats.parsers.interfaces import IFileParser
+from app.modules.chats.parsers.imageParser.interfaces import IFileParser
 
 class ImageParser(IFileParser):
     async def parse(self, file_path: str) -> str:

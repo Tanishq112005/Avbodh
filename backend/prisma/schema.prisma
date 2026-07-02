@@ -11,3 +11,59 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum Day {
+  Monday
+  Tuesday
+  Wednesday
+  Thursday
+  Friday
+  Saturday
+  Sunday
+}
+
+enum Month {
+  January
+  February
+  March
+  April
+  May
+  June
+  July
+  August
+  September
+  October
+  November
+  December
+}
+
+enum Gender {
+  Male 
+  Female 
+  Other
+}
+
+
+model User {
+  id            String @id @default(uuid())
+  firstName     String
+  middleName    String
+  lastName      String
+  day           Day
+  month         Month
+  year          Int
+  country_code  String 
+  phone         BigInt
+  stage         Int 
+  email         String @unique
+  password      String 
+  refersh_token String @unique
+  created_at    DateTime  @default(now())
+  is_verified   Boolean   @default(false)
+  gender        Gender 
+}
+
+
+
+
+

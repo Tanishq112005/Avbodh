@@ -1,10 +1,10 @@
-from app.modules.chats.chat_models.interfaces import ChatModels
+from app.modules.chats.chat_models.interfaces import IChatModels
 from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
 from app.core.config import settings
 
 
 ## Hugging Face Model 
-class HuggingFace(ChatModels):
+class HuggingFace(IChatModels):
     
     def setModel(self, repo_id: str, task: str , max_length: int , temperature: float):
       
