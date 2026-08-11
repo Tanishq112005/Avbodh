@@ -1,4 +1,4 @@
-class ApiResponse  {
+export class ApiResponse  {
 
     // defing the type of the input 
     message : string ; 
@@ -13,5 +13,4 @@ class ApiResponse  {
     }
 }
 
-
-export default ApiResponse ; 
+

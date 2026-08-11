@@ -1,4 +1,4 @@
-class ApiError  {
+export class ApiError  {
     
     // defing the type of the input
     success: boolean; 
@@ -17,5 +17,4 @@ class ApiError  {
 
     }
 }
-
-export default ApiError;
+
