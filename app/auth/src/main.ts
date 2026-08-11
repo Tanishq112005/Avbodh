@@ -10,6 +10,14 @@ app.get('/', (req, res) => {
 });
 
 
+import cookieParser from 'cookie-parser';
+import { authRouter } from './routes/auth';
+
+app.use(express.json());
+app.use(cookieParser());
+
+app.use('/auth', authRouter);
+
 app.get("/health" , (req , res) => {
     res.send({
         'message' : "Server is Running Properly"

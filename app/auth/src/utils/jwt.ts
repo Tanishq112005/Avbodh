@@ -5,35 +5,24 @@ import { jwtConfigAccessToken, jwtConfigRefershToken } from "../config/jwt"
 
 
 
-
-
 // give the json web token 
-function generateAccessToken(payload : jwtPayloadAccessToken){
+export function generateAccessToken(payload : jwtPayloadAccessToken){
     const options: jwt.SignOptions = {
-        expiresIn: jwtConfigAccessToken.expiry_time,
-        algorithm: jwtConfigAccessToken.algorithm
+        expiresIn: jwtConfigAccessToken.expiry_time as jwt.SignOptions["expiresIn"],
+        algorithm: jwtConfigAccessToken.algorithm as jwt.Algorithm
     };
     
     return jwt.sign(payload, jwtConfigAccessToken.secret_key, options);
-    
 }
 
-
-
 // generating the refersh token 
-export function generateRefershToken(payload : jwtPayloadRefershToken , expireTime : any){
+export function generateRefershToken(payload : jwtPayloadRefershToken , expireTime : string){
      const options: jwt.SignOptions = {
-        expiresIn: expireTime , 
-        algorithm: jwtConfigRefershToken.algorithm
+        expiresIn: parseInt(expireTime) , 
+        algorithm: jwtConfigRefershToken.algorithm as jwt.Algorithm
     };
     
     return jwt.sign(payload, jwtConfigRefershToken.secret_key, options);
-    
 }
 
 
-
-
-export {
-    generateAccessToken 
-}

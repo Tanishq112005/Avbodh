@@ -42,4 +42,4 @@ class RedisConfig {
 }
 
 export const redisConfig = new RedisConfig();
-export const questionBitMapRedisclient = redisConfig.redisClient ; 
+export const redisClient = redisConfig.redisClient ; 
