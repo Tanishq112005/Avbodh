@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../dist/out-tsc",
+    "module": "commonjs",
+    "types": ["node"]
+  },
+  "include": ["src/**/*.ts", "../../libs/shared/utils/src/lib/ApiError.ts", "../../libs/shared/utils/src/lib/ApiResponse.ts"]
+}
