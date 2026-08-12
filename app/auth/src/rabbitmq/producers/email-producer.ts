@@ -1,6 +1,6 @@
 import { rabbitMQClient } from "../connection"; 
 import { NotificationMessage } from "@avbodh/utils";
-
+import { QUEUE_EXCHANGE , QUEUE_ROUTING_EMAIL } from "../../config/env";
 export class EmailProducer {
   constructor() {}
 
@@ -10,8 +10,8 @@ export class EmailProducer {
       console.log(data); 
       console.log("From the producer");
       
-      const exchange = "main_exchange";
-      const routingKey = "email.send";
+      const exchange = QUEUE_EXCHANGE;
+      const routingKey = QUEUE_ROUTING_EMAIL;
 
       await channel.assertExchange(exchange, "direct", { durable: true });
 
@@ -27,7 +27,7 @@ export class EmailProducer {
         { persistent: true }
       );
       
-      console.log(`OTP Sent via RabbitMQ`);
+      console.log(`OTP Sent via Queue`);
 
     } catch (err: any) {
       console.error("Producer Error:", err);

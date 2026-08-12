@@ -4,7 +4,6 @@ import { PrismaClient } from '@prisma/client';
 import ws from 'ws';
 import { DATABASE_URL, DATABASE_URL_PRODUCTION } from '../config/env';
 
-// Node.js doesn't have a native WebSocket, so we tell Neon to use the 'ws' package
 neonConfig.webSocketConstructor = ws;
 
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };

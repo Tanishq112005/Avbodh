@@ -25,6 +25,7 @@ class User {
     }
   }
 
+  
   // creating the user with not verified status , it means right now user is not verified
   async creatingUser(details: userSignInputDetails) {
     const { name, email, password, type } = details;
@@ -78,7 +79,6 @@ class User {
   }
 
   // updating the password in the table using the userid
-
   async updatePassword(user_id: string, password: string) {
     try {
       console.log(`🔍 REPO: Attempting to update User ID: ${user_id}`);
@@ -87,12 +87,12 @@ class User {
       const exists = await this.db.user.findUnique({ where: { id: user_id } });
       if (!exists) {
         console.error(
-          `❌ REPO ERROR: User ID ${user_id} does not exist in DB!`,
+          `REPO ERROR: User ID ${user_id} does not exist in DB!`,
         );
         throw new Error(`User ID ${user_id} not found`);
       }
 
-      console.log(`👤 User Found: ${exists.email}. Updating password...`);
+      console.log(`User Found: ${exists.email}. Updating password...`);
 
       // 2. Perform Update
       const updated = await this.db.user.update({
@@ -142,9 +142,6 @@ class User {
     }
   }
  
-
-  
-  
 }
 
 export const user = new User(database);

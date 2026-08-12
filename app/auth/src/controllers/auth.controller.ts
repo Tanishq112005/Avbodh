@@ -1,4 +1,3 @@
-import { database } from '../lib/database';
 import {
   OTP_EXPIRE_TIME,
   GOOGLE_CLIENT_ID,
@@ -6,15 +5,12 @@ import {
 } from '../config/env';
 import { OAuth2Client } from 'google-auth-library';
 import crypto from 'crypto';
-import { PrismaClient } from '@prisma/client';
 import { emailProducer } from '../rabbitmq/producers/email-producer';
 import { user } from '../repositories/user.db';
-
 import {
   jwtPayloadAccessToken,
   jwtPayloadRefershToken,
 } from '../types/jwt.types';
-
 import { ApiError, ApiResponse } from '@avbodh/utils';
 import { random6digitnumber } from '../utils/generateOtp';
 import { generateAccessToken, generateRefershToken } from '../utils/jwt';
@@ -27,39 +23,51 @@ import {
   userDetails,
   userSignInputDetails,
 } from '@avbodh/utils';
-import { redisConfig } from '../lib/redis';
+import {  RedisClientType } from 'redis';
+
+
 
 export class AuthController {
-  private db: PrismaClient | any;
-
-  constructor(dbClient: PrismaClient | any) {
-    this.db = dbClient;
+ 
+  private redis : RedisClientType | any ;
+  constructor(redis : RedisClientType | any) {
+    this.redis = redis;
   }
 
   public createUser = async (req: any, res: any) => {
     const { name, email, password, type } = req.body;
 
     try {
+      // step-1: first creating the hashpassword
       const hashedPassword: string = await hashPassword(password);
+      
+      // step-2:  then creating the Payload
       const signinPayload: userSignInputDetails = {
         name: name,
         email: email,
         password: hashedPassword,
         type: type,
       };
+      
 
+      // step-3: checking the user is Present 
       const checkingUserPresent = await user.checkingUserPresent(email);
+
       if (checkingUserPresent && checkingUserPresent.is_verified) {
         return res.status(409).json(new ApiError('User already exists'));
       }
       if (!checkingUserPresent) {
         const creatingUser = await user.creatingUser(signinPayload);
       }
+      
 
+      // step-4: generate the 6 digit number 
       const otp = random6digitnumber();
+
       const redis_key = `auth:${email}`;
       const otp_expire_time = Number(OTP_EXPIRE_TIME) || 300;
-
+        
+      // step-5: Making the Notification Payload 
       const payload: NotificationMessage = new NotificationBuilder()
         .setToEmail(email)
         .setSubject('Verify Account')
@@ -69,11 +77,12 @@ export class AuthController {
           } minutes`,
         )
         .build();
-
+       
+      // step-6: Sending the Email   
       await emailProducer.send(payload);
 
       console.log(`Saving OTP to Redis for ${email}...`);
-      await redisClient.setEx(redis_key, otp_expire_time, String(otp));
+      await this.redis.setEx(redis_key, otp_expire_time, String(otp));
 
       console.log('Saved to Redis');
       return res.status(200).json(new ApiResponse('OTP is Sent Successfully'));
@@ -83,7 +92,9 @@ export class AuthController {
         .json(new ApiError('Error in user creation or sending the OTP', err));
     }
   };
+  
 
+ 
   public verifySignupOtp = async (req: any, res: any) => {
     const { email, otp } = req.body;
 
@@ -96,7 +107,7 @@ export class AuthController {
       }
 
       // OTP verified, now delete it to prevent reuse
-      await redisClient.del(key);
+      await this.redis.del(key);
 
       await user.changingIsVerifiedStatus(email);
       const informationOfUser: any = await user.checkingUserPresent(email);
@@ -145,14 +156,14 @@ export class AuthController {
 
     try {
       const key = `auth:${email}`;
-      const storedOtp = await redisClient.get(key);
+      const storedOtp = await this.redis.get(key);
 
       if (!storedOtp || storedOtp !== String(otp)) {
         return res.status(400).json(new ApiError('OTP is expired or invalid'));
       }
 
       // Delete OTP after successful verification
-      await redisClient.del(key);
+      await this.redis.del(key);
 
       const userDetails = await user.userDetails(email);
 
@@ -201,7 +212,7 @@ export class AuthController {
 
         await emailProducer.send(payload);
 
-        await redisClient.setEx(redis_key, otp_expire_time, String(otp));
+        await this.redis.setEx(redis_key, otp_expire_time, String(otp));
       }
 
       return res
@@ -269,6 +280,8 @@ export class AuthController {
     }
   };
 
+
+  // for loging the User 
   public login = async (req: any, res: any) => {
     const { email, password, remberMe } = req.body;
     try {
@@ -494,8 +507,6 @@ export class AuthController {
       }
 
       // 2. Clear the cookie from the browser
-      // CRITICAL: The options passed to clearCookie must exactly match the options
-      // used when the cookie was originally set in the login method (except for maxAge).
       const isProduction = process.env.NODE_ENV === 'production';
       res.clearCookie('refreshToken', {
         httpOnly: true,
@@ -516,4 +527,4 @@ export class AuthController {
   };
 }
 
-export const authController = new AuthController(database);
+export const authController = new AuthController(redisClient);

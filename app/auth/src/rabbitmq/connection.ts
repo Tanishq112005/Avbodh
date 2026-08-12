@@ -1,5 +1,5 @@
 import client, { Connection, Channel } from "amqplib";
-import { RABBITMQ_CONNECTION } from "../config/env";
+import { QUEUE_URL } from "../config/env";
 import { ApiError } from "@avbodh/utils";
 
 class RabbitMQClient {
@@ -17,39 +17,39 @@ class RabbitMQClient {
     try {
       console.log(`Connecting to RabbitMQ... (Attempt ${this.reconnectAttempts + 1})`);
 
-      if (!RABBITMQ_CONNECTION) {
-        throw new Error("FATAL: RABBITMQ_CONNECTION is undefined. Check .env.dev loading.");
+      if (!QUEUE_URL) {
+        throw new Error("FATAL: QUEUE URL is undefined. Check .env.dev loading.");
       }
 
-      this.connection = await client.connect(RABBITMQ_CONNECTION);
+      this.connection = await client.connect(QUEUE_URL);
       this.channel = await this.connection.createChannel();
       this.connected = true;
       this.reconnecting = false;
       this.reconnectAttempts = 0;
-      console.log("RabbitMQ Connected Successfully");
+      console.log("Queue Connected Successfully");
 
       this.connection.on("error", (err: Error) => {
-        console.error("RabbitMQ Connection Error:", err.message);
+        console.error("Queue Connection Error:", err.message);
         this.handleDisconnect();
       });
 
       this.connection.on("close", () => {
-        console.warn("RabbitMQ Connection Closed. Triggering reconnect...");
+        console.warn("Queue Connection Closed. Triggering reconnect...");
         this.handleDisconnect();
       });
 
       this.channel.on("error", (err: Error) => {
-        console.error("RabbitMQ Channel Error:", err.message);
+        console.error("Queue Channel Error:", err.message);
         this.handleDisconnect();
       });
 
       this.channel.on("close", () => {
-        console.warn("RabbitMQ Channel Closed. Triggering reconnect...");
+        console.warn("Queue Channel Closed. Triggering reconnect...");
         this.handleDisconnect();
       });
 
     } catch (error: any) {
-      console.error("RabbitMQ Connection Failed:", error.message);
+      console.error("Queue Connection Failed:", error.message);
       this.connected = false;
       this.channel = null;
       this.connection = null;
