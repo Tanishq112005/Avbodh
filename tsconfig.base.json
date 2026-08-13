@@ -13,9 +13,9 @@
     "lib": ["es2020", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
-    "strict": false,
+    "strict": true,
     "paths": {
-      "@avbodh/utils": ["./libs/shared/utils/src/index.ts"]
+      "@avbodh/typescript": ["./libs/typescript/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

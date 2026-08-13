@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { database } from "../lib/database";
 
-import { ApiError, userDetails, userSignInputDetails } from "@avbodh/utils";
+import { ApiError, userDetails, userSignInputDetails } from "@avbodh/typescript";
 
 class User {
   private db: PrismaClient;

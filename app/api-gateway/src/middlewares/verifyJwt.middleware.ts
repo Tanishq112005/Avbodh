@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { ApiError } from '@avbodh/utils';
+import { ApiError } from '@avbodh/typescript';
 import { AUTHSERVICEURL, JWT_SECERTS } from '../config/env';
 export const verifyJwtMiddleware = async (
   req: Request,

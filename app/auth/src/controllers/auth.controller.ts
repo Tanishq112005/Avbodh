@@ -11,7 +11,7 @@ import {
   jwtPayloadAccessToken,
   jwtPayloadRefershToken,
 } from '../types/jwt.types';
-import { ApiError, ApiResponse } from '@avbodh/utils';
+import { ApiError, ApiResponse } from '@avbodh/typescript';
 import { random6digitnumber } from '../utils/generateOtp';
 import { generateAccessToken, generateRefershToken } from '../utils/jwt';
 import { comparePasswords, hashPassword } from '../utils/password';
@@ -22,7 +22,7 @@ import {
   verifiyingRefeshToken,
   userDetails,
   userSignInputDetails,
-} from '@avbodh/utils';
+} from '@avbodh/typescript';
 import {  RedisClientType } from 'redis';
 
 
@@ -350,7 +350,7 @@ export class AuthController {
     try {
       const decoded = await verifiyingRefeshToken(
         incomingRefreshToken,
-        JWT_SECRET_REFERSH_TOKEN,
+        JWT_SECRET_REFERSH_TOKEN as string
       );
 
       const userId = decoded.id;
@@ -488,7 +488,7 @@ export class AuthController {
         try {
           const decoded = await verifiyingRefeshToken(
             incomingRefreshToken,
-            JWT_SECRET_REFERSH_TOKEN,
+            JWT_SECRET_REFERSH_TOKEN as string
           );
 
           if (decoded && decoded.id) {

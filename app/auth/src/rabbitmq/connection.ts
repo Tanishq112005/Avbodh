@@ -1,6 +1,6 @@
 import client, { Connection, Channel } from "amqplib";
 import { QUEUE_URL } from "../config/env";
-import { ApiError } from "@avbodh/utils";
+import { ApiError } from "@avbodh/typescript";
 
 class RabbitMQClient {
   private connection: any = null;

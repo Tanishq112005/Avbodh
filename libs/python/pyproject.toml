@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "avbodh-tools"
+version = "0.1.0"
+description = "Shared tools and database clients for Avbodh AI Agents"
+authors = ["Avbodh <dev@avbodh.com>"]
+packages = [
+    { include = "avbodh_tools", from = "src/tools" }
+]
+[tool.poetry.dependencies]
+python = "^3.10"
+PyMuPDF = "^1.23.0"
+redis = "^5.0.0"
+# Add your specific Vector DB library here (e.g. pinecone-client, chromadb, qdrant-client)
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

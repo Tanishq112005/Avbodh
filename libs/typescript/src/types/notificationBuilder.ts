@@ -1,5 +1,4 @@
-import { NotificationTypes, SendingPerson } from "@prisma/client";
-import { NotificationMessage } from "./notificationInterface";
+import { NotificationMessage } from "../types/notificationInterface";
 
 export class NotificationBuilder {
   public message: NotificationMessage;
@@ -37,28 +36,7 @@ export class NotificationBuilder {
     return this;
   }
 
-   
-  setFrom(from : SendingPerson){
-    this.message.from = from;
-    return this ; 
-  }
-
-  setTo(to : SendingPerson){
-    this.message.to = to ;
-    return this ; 
-  }
-
-
-  setType(type : NotificationTypes) : this {
-     this.message.type = type ; 
-     return this ; 
-  }
-
-  setStudentId(type : any) {
-    this.message.studentId = type ; 
-    return this ; 
-  }
-
+  
   fromJSON(data: any): this {
     const rawData = data.message ? data.message : data;
     Object.assign(this.message, rawData);

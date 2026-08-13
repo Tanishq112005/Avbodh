@@ -1,7 +1,7 @@
 import express from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import cookieParser from 'cookie-parser';
-import { ApiResponse } from '@avbodh/utils';
+import { ApiResponse } from '@avbodh/typescript';
 import {
   HOST,
   PORT,

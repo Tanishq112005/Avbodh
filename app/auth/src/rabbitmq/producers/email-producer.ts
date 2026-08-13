@@ -1,5 +1,5 @@
 import { rabbitMQClient } from "../connection"; 
-import { NotificationMessage } from "@avbodh/utils";
+import { NotificationMessage } from "@avbodh/typescript";
 import { QUEUE_EXCHANGE , QUEUE_ROUTING_EMAIL } from "../../config/env";
 export class EmailProducer {
   constructor() {}
@@ -13,7 +13,7 @@ export class EmailProducer {
       const exchange = QUEUE_EXCHANGE;
       const routingKey = QUEUE_ROUTING_EMAIL;
 
-      await channel.assertExchange(exchange, "direct", { durable: true });
+      await channel.assertExchange(exchange as string, "direct", { durable: true });
 
       // 1. Convert the class instance properties into a JSON string
       const jsonString = JSON.stringify(data);
@@ -21,8 +21,8 @@ export class EmailProducer {
       // 2. Convert the string into raw bytes (Buffer) for RabbitMQ
       const bufferData = Buffer.from(jsonString);
       channel.publish(
-        exchange,
-        routingKey,
+        exchange as string,
+        routingKey as string,
         bufferData, // <-- Send the Buffer, not the object
         { persistent: true }
       );

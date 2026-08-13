@@ -1,0 +1,33 @@
+{
+  "name": "python",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/python/src",
+  "targets": {
+    "build": {
+      "executor": "@nxlv/python:build",
+      "outputs": ["{projectRoot}/dist"],
+      "options": {
+        "outputPath": "dist/libs/python",
+        "publish": false,
+        "lockedVersions": true,
+        "bundleLocalDependencies": true
+      }
+    },
+    "lint": {
+      "executor": "@nxlv/python:flake8",
+      "outputs": ["{workspaceRoot}/reports/libs/python/pylint.txt"],
+      "options": {
+        "outputFile": "reports/libs/python/pylint.txt"
+      }
+    },
+    "test": {
+      "executor": "@nxlv/python:pytest",
+      "outputs": ["{workspaceRoot}/reports/libs/python/unittests.xml"],
+      "options": {
+        "outputFile": "reports/libs/python/unittests.xml"
+      }
+    }
+  },
+  "tags": []
+}

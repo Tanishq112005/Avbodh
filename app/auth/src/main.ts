@@ -1,7 +1,7 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import { authRouter } from './routes/auth';
-import { ApiResponse } from '@avbodh/utils';
+import { ApiResponse } from '@avbodh/typescript';
 const host = process.env.HOST ?? 'localhost';
 const port = process.env.PORT ? Number(process.env.PORT) : 3000;
 
