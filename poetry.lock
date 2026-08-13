@@ -46,6 +46,27 @@ files = [
 ]
 
 [[package]]
+name = "avbodh-tools"
+version = "0.1.0"
+description = "Shared tools and database clients for Avbodh AI Agents"
+optional = false
+python-versions = "^3.10"
+groups = ["main"]
+files = []
+develop = true
+
+[package.dependencies]
+boto3 = "^1.34.0"
+langchain = "^1.3.15"
+langchain-huggingface = "^1.2.2"
+PyMuPDF = "^1.23.0"
+redis = "^5.0.0"
+
+[package.source]
+type = "directory"
+url = "libs/python"
+
+[[package]]
 name = "boto3"
 version = "1.43.71"
 description = "The AWS SDK for Python"
@@ -1964,4 +1985,4 @@ cffi = ["cffi (>=1.17,<2.0) ; platform_python_implementation != \"PyPy\" and pyt
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "12a9ea4dbd62e6b53f184736e4b70fb019742a2a520befb28e762e7a67450a81"
+content-hash = "81e22175ff93cbd67769b08fcc4ea8817d2eca51a9c6b0662457dc0880d63aa6"

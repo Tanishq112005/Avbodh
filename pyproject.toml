@@ -1,0 +1,22 @@
+[tool.nx]
+autoActivate = true
+
+[tool.poetry]
+name = "@avbodh/source"
+version = "1.0.0"
+description = ""
+authors = [ ]
+license = "Proprietary"
+readme = "README.md"
+package-mode = false
+
+  [tool.poetry.dependencies]
+  python = "^3.10"
+
+    [tool.poetry.dependencies.avbodh-tools]
+    path = "libs/python"
+    develop = true
+
+[build-system]
+requires = [ "poetry-core==1.1.0" ]
+build-backend = "poetry.core.masonry.api"
