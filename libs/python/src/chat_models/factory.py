@@ -1,7 +1,5 @@
 ## model factory , defing the models used 
-
-
-from app.modules.chats.schemas import HuggingFaceChatModelConfig
+from ..schemas.huggingFace import HuggingFaceChatModelConfig
 from .huggingFace import HuggingFace
 
 

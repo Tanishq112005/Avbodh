@@ -1,5 +1,5 @@
 from .interfaces import IEmbedder
-from langchain_huggingface import HuggingFaceEndpointEmbeddings
+from  langchain_huggingface import HuggingFaceEndpointEmbeddings
 
 
 class HuggingFace(IEmbedder):

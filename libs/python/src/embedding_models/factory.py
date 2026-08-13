@@ -1,5 +1,8 @@
-from app.modules.chats.schemas import HuggingFaceEmbeddingModelConfig
+from ..schemas.huggingFace import HuggingFaceEmbeddingModelConfig
 from .huggingFace import HuggingFace
+
+
+
 class EmbeddingModelFactory:
     
     def get_method(model_type: str , config: dict):
