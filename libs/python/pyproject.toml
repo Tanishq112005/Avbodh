@@ -2,19 +2,10 @@
 name = "avbodh-tools"
 version = "0.1.0"
 description = "Shared tools and database clients for Avbodh AI Agents"
-authors = [ "Avbodh <dev@avbodh.com>" ]
+authors = [ "Tanishq Jain" ]
 
   [[tool.poetry.packages]]
-  include = "chat_models"
-  from = "src"
-
-  [[tool.poetry.packages]]
-  include = "embedding_models"
-  from = "src"
-
-  [[tool.poetry.packages]]
-  include = "tools"
-  from = "src"
+  include = "avbodh_tools"
   [tool.poetry.dependencies]
   python = "^3.10"
   PyMuPDF = "^1.23.0"
