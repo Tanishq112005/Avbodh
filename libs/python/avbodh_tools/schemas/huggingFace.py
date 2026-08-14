@@ -11,4 +11,3 @@ class HuggingFaceChatModelConfig(BaseModel):
 class HuggingFaceEmbeddingModelConfig(BaseModel):
     model_name : str 
         
-    

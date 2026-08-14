@@ -5,6 +5,7 @@ from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
 ## Hugging Face Model 
 class HuggingFace(IChatModels):
     
+    model : ChatHuggingFace
     def setModel(self, repo_id: str, task: str , max_length: int , temperature: float, api_key: str):
       
         self.__llm = HuggingFaceEndpoint(
@@ -17,10 +18,9 @@ class HuggingFace(IChatModels):
         
         self__model = ChatHuggingFace(llm = self.__llm) 
     
+    def getModel(self):
+        return self.model     
   
-    def invoke(self, question: str):
-        response = self.__model.invoke(question)
-        return response.content 
     
     
     

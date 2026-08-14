@@ -1,8 +1,9 @@
 ## model factory , defing the models used 
 from ..schemas.huggingFace import HuggingFaceChatModelConfig
 from .huggingFace import HuggingFace
-
-
+from langchain_groq import ChatGroq
+from ..schemas.groq import GroqChatModelConfig
+from .groq import Groq
 class ChatModelFactory:
     
     def get_method(model_type: str , config: dict):
@@ -21,6 +22,17 @@ class ChatModelFactory:
                 temperature=validated_data.temperature,
                 api_key=api_key
             )
-            return model ; 
+            return model.getModel ; 
+        
+        if model_type == "groq":
+            validated_data = GroqChatModelConfig(**config) 
+            model = Groq()
+            api_key = validated_data.access_key
+            model.setMode(uri=api_key)
+            
+            return model.getModel ; 
+            
+             
+            
         
         
