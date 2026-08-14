@@ -10,14 +10,12 @@ app = FastAPI(
 
 
 @app.get("/health" , tags=["Health CheckUp"])
+
+
 def health_check():
  
     return JSONResponse(
               ApiResponse(
         "Health of the server is Ok"
     ))
-
-
-
-
 
