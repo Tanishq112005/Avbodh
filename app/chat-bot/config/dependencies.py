@@ -1,0 +1,70 @@
+from avbodh_tools.tools import AvbodhRabbitMQClient, VectorDBClientFactory, RedisClientFactory
+from avbodh_tools.chat_models.factory import ChatModelFactory
+from avbodh_tools.embedding_models.factory import EmbeddingModelFactory
+from .env import settings
+
+class Dependencies:
+
+
+    _rabbitmq_client = None
+    _chat_model = None
+    _redis_client = None
+    _vector_client = None
+    _embedding_model = None
+
+    @classmethod
+    def get_embedding_model(cls):
+
+        if cls._embedding_model is None:
+            config = {
+                "model_name": settings.EMBEDDING_MODEL,
+                "api_key": settings.HUGGINGFACEHUG_API_TOKEN
+            }
+            
+            cls._embedding_model = EmbeddingModelFactory.get_method("hugging_face", config)
+        return cls._embedding_model
+
+
+    @classmethod
+    def get_rabbitmq_client(cls) -> AvbodhRabbitMQClient:
+        if cls._rabbitmq_client is None:
+            cls._rabbitmq_client = AvbodhRabbitMQClient(uri=settings.RABBITMQ_URI)
+        return cls._rabbitmq_client
+
+
+    @classmethod
+    def get_chat_model(cls):
+        
+        if cls._chat_model is None:
+            api_key = settings.GROQ_API_KEY
+            cls._chat_model = ChatModelFactory.get_method("groq", {
+                "access_key": api_key
+            })
+            
+        return cls._chat_model
+
+
+    @classmethod
+    def get_redis_client(cls):
+    
+        if cls._redis_client is None:
+            
+            redis_url = settings.REDIS_URL
+            cls._redis_client = RedisClientFactory.get_client(redis_url=redis_url)
+        return cls._redis_client
+
+
+
+    @classmethod
+    def get_vector_client(cls):
+        """Returns a singleton instance of the Vector DB client."""
+        if cls._vector_client is None:
+            # Pass settings explicitely to the generic factory
+            api_key = getattr(settings, "PINECONE_API_KEY", None)
+            index_name = getattr(settings, "PINECONE_INDEX_NAME", None)
+            cls._vector_client = VectorDBClientFactory.get_client(
+                "pinecone", 
+                api_key=api_key, 
+                index_name=index_name
+            )
+        return cls._vector_client
