@@ -6,7 +6,8 @@ from ..schemas.groq import GroqChatModelConfig
 from .groq import Groq
 class ChatModelFactory:
     
-    def get_method(model_type: str , config: dict):
+    @staticmethod
+    def get_method(model_type: str, config: dict):
         
         if model_type == "hugging_face":
             validated_data = HuggingFaceChatModelConfig(**config)
@@ -22,15 +23,15 @@ class ChatModelFactory:
                 temperature=validated_data.temperature,
                 api_key=api_key
             )
-            return model.getModel ; 
+            return model.getModel()
         
         if model_type == "groq":
             validated_data = GroqChatModelConfig(**config) 
             model = Groq()
             api_key = validated_data.access_key
-            model.setMode(uri=api_key)
+            model.setModel(uri=api_key)
             
-            return model.getModel ; 
+            return model.getModel()
             
              
             

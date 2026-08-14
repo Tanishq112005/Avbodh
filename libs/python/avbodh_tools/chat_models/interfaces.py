@@ -1,15 +1,15 @@
-from abc import ABC , classmethod  
+from abc import ABC, abstractmethod  
 
 
 ## define the work of the each of the chat models 
 
 class IChatModels(ABC):
  
-    @classmethod
-    def setModel(modelName):
+    @abstractmethod
+    def setModel(self, **kwargs):
         pass
     
-    @classmethod 
-    def getModel(modelName):
+    @abstractmethod 
+    def getModel(self):
         pass  
     

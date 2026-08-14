@@ -1,23 +1,21 @@
-import redis
+import redis.asyncio as redis
 import os
 
 class RedisClientFactory:
     """
-    A generic factory to create Redis clients for your Agents.
+    A generic factory to create async Redis clients for your Agents.
     """
     _instance = None
 
     @classmethod
-    def get_client(cls):
+    def get_client(cls, redis_url: str = None):
         if cls._instance is None:
-            host = os.getenv("REDIS_HOST", "localhost")
-            port = int(os.getenv("REDIS_PORT", 6379))
-            password = os.getenv("REDIS_PASSWORD", None)
+            # Fallback to os.getenv if URL is not passed explicitly
+            url = redis_url or os.getenv("REDIS_URL", "redis://localhost:6379")
             
-            cls._instance = redis.Redis(
-                host=host, 
-                port=port, 
-                password=password, 
+            # Using from_url allows passing fully formatted strings (like Upstash provides)
+            cls._instance = redis.from_url(
+                url, 
                 decode_responses=True
             )
         return cls._instance

@@ -1,21 +1,21 @@
-from abc import ABC , classMethod
+from abc import ABC, abstractmethod
 
 ## defination of the embedding models ## 
 
-class IEmbedder: 
+class IEmbedder(ABC): 
     
-    @classMethod
-    def set_model(modelData):
+    @abstractmethod
+    def set_model(self, model_name: str, api_key: str):
         pass 
     
     
-    @classMethod
-    def embedding_query(dataForEmbedding):
+    @abstractmethod
+    def embedding_query(self, dataForEmbedding):
         pass   
     
     
-    @classMethod
-    def embedding_document(dataOfPdf):
+    @abstractmethod
+    def embedding_document(self, dataOfPdf):
         pass 
     
     
