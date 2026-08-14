@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     B2_APPLICATION_KEY: str | None = None
     B2_BUCKET_NAME: str | None = None
     
-    
+    GROQ_API_KEY : str | None = None 
     
     model_config = SettingsConfigDict(env_file=".env")
     
