@@ -2,6 +2,7 @@ import time
 from langgraph.graph import START, END, StateGraph 
 from .state import ChatBotStateSpace
 from .node import chatting
+import asyncio
 
 ### 1. Define the agent State space for the graph 
 graph = StateGraph(ChatBotStateSpace)
@@ -17,9 +18,10 @@ graph.add_edge('ChatNode', END)
 chatBot = graph.compile() 
 
 
-def stream_chat(message: str, thread_id: str = "1"):
+
+async def stream_chat(message: str, thread_id: str = "1"):
     """
-    Generator function to stream chat responses using Server-Sent Events (SSE) format.
+    Async Generator function to stream chat responses using Server-Sent Events (SSE) format.
     """
     config = {
         "configurable": {
@@ -27,8 +29,8 @@ def stream_chat(message: str, thread_id: str = "1"):
         }
     }
     
-    # LangGraph's stream with stream_mode="messages" directly yields (message_chunk, metadata)
-    for msg_chunk, metadata in chatBot.stream(
+    # Use 'astream' and 'async for' because the 'chatting' node is an async function!
+    async for msg_chunk, metadata in chatBot.astream(
         input={"message": message},
         stream_mode="messages",
         config=config
@@ -37,4 +39,4 @@ def stream_chat(message: str, thread_id: str = "1"):
         # We only want to stream actual content, not empty chunks or tool calls
         if msg_chunk.content:
             yield f"data: {msg_chunk.content}\n\n"
-            time.sleep(0.05)  
+            await asyncio.sleep(0.05)  
