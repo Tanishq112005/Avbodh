@@ -17,7 +17,7 @@ export class EmailProducer {
       const exchange = QUEUE_EXCHANGE as string;
       const routingKey = QUEUE_ROUTING_EMAIL as string;
 
-      // The generic producer handles the JSON.stringify, Buffer.from, and assertExchange!
+   
       await this.producer.publish(exchange, routingKey, data);
       
       console.log(`OTP Sent via Queue`);

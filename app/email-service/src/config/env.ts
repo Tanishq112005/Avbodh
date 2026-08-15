@@ -12,7 +12,5 @@ function requireEnv(key: string): string {
   return value;
 }
 
-export const {
-  PORT,
-  HOST
-} = process.env;
+export const { PORT, HOST, QUEUE_URL, EXCHANGE_KEY, EMAIL_QUEUE_NAME , BREVO_KEY_1, EMAIL_ID_1} =
+  process.env;

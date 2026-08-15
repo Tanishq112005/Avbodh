@@ -52,6 +52,7 @@
     "@prisma/client": "^7.9.1",
     "@tidbcloud/prisma-adapter": "^6.17.0",
     "amqplib": "^2.0.1",
+    "axios": "^1.19.0",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.4.2",
