@@ -7,4 +7,6 @@ export * from './utils/ApiError';
 export * from './utils/ApiResponse';
 export * from './utils/jwt';
 
-export * from './tools/clients/queue/rabbitMq/connection'
+export * from './tools/clients/queue/rabbitMq/connection';
+export * from './tools/clients/queue/rabbitMq/producer';
+export * from './tools/clients/queue/rabbitMq/consumer';

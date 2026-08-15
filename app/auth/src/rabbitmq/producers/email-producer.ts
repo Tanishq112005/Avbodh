@@ -1,31 +1,24 @@
 import { appRabbitMQ } from "../../main"; 
-import { NotificationMessage } from "@avbodh/typescript";
+import { NotificationMessage, RabbitMQProducer } from "@avbodh/typescript";
 import { QUEUE_EXCHANGE , QUEUE_ROUTING_EMAIL } from "../../config/env";
+
 export class EmailProducer {
-  constructor() {}
+  private producer: RabbitMQProducer;
+
+  constructor() {
+    this.producer = new RabbitMQProducer(appRabbitMQ);
+  }
 
   async send(data: NotificationMessage) {
     try {
-      const channel = await appRabbitMQ.getChannel(); 
       console.log(data); 
       console.log("From the producer");
       
-      const exchange = QUEUE_EXCHANGE;
-      const routingKey = QUEUE_ROUTING_EMAIL;
+      const exchange = QUEUE_EXCHANGE as string;
+      const routingKey = QUEUE_ROUTING_EMAIL as string;
 
-      await channel.assertExchange(exchange as string, "direct", { durable: true });
-
-      // 1. Convert the class instance properties into a JSON string
-      const jsonString = JSON.stringify(data);
-      
-      // 2. Convert the string into raw bytes (Buffer) for RabbitMQ
-      const bufferData = Buffer.from(jsonString);
-      channel.publish(
-        exchange as string,
-        routingKey as string,
-        bufferData, // <-- Send the Buffer, not the object
-        { persistent: true }
-      );
+      // The generic producer handles the JSON.stringify, Buffer.from, and assertExchange!
+      await this.producer.publish(exchange, routingKey, data);
       
       console.log(`OTP Sent via Queue`);
 
