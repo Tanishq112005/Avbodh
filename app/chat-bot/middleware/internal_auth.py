@@ -5,11 +5,7 @@ from config.env import settings
 import logging
 
 class InternalAuthMiddleware(BaseHTTPMiddleware):
-    """
-    Middleware to enforce Zero-Trust networking.
-    It blocks any request that doesn't have the correct X-Internal-Secret header
-    injected by the API Gateway.
-    """
+    
     async def dispatch(self, request: Request, call_next):
         # Allow the health check route to bypass internal auth
         if request.url.path == "/health":

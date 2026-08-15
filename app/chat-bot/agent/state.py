@@ -6,7 +6,6 @@ from langgraph.graph.message import add_messages
 
 class ChatBotStateSpace(TypedDict):  
      message: Annotated[list[BaseMessage] , add_messages] 
-     cache_hit: bool
      
       
     
