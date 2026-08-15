@@ -4,10 +4,15 @@ from fastapi.responses import JSONResponse
 from avbodh_tools import ApiResponse, ApiError
 from router.chatBot import router as chat_router
 from config.dependencies import Dependencies
+from middleware.internal_auth import InternalAuthMiddleware
+
 ## docs url for this repo 
 app = FastAPI(
     docs_url="/docs" 
 )
+
+# Apply the Zero-Trust internal auth middleware
+app.add_middleware(InternalAuthMiddleware)
 
 ### Starting different dependenices 
 Dependencies.get_chat_model() 

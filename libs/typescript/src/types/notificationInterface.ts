@@ -4,6 +4,7 @@ export interface NotificationMessage {
   toEmail?: string;
   toPhone?: string;
   subject?: string;
+  type?: string;
   content?: string;
   cc?: string[];
   metadata?: Record<string, any> ; 

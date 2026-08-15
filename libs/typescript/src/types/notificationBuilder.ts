@@ -13,6 +13,11 @@ export class NotificationBuilder {
     return this;
   }
 
+  setType(type: string): this {
+    this.message.type = type;
+    return this;
+  }
+
   setToPhone(phone: string): this {
     this.message.toPhone = phone;
     return this;

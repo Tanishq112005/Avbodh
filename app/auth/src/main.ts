@@ -3,7 +3,7 @@ import cookieParser from 'cookie-parser';
 import { authRouter } from './routes/auth';
 import { ApiResponse } from '@avbodh/typescript';
 const host = process.env.HOST ?? 'localhost';
-const port = process.env.PORT ? Number(process.env.PORT) : 3000;
+const port = process.env.PORT ? Number(process.env.PORT) : 4000;
 import {RabbitMQClient} from '@avbodh/typescript'
 import { QUEUE_URL } from './config/env';
 const app = express();
@@ -14,15 +14,16 @@ app.use(cookieParser());
 
 
 
-// doing the connection of the rabbit MQ 
-const rabbitMqString = String(QUEUE_URL)
-export const appRabbitMQ = new RabbitMQClient(rabbitMqString)
+// Import the RabbitMQ client from its dedicated file to avoid circular dependencies
+import { appRabbitMQ } from './rabbitmq/client';
+import { internalAuthMiddleware } from './middlewares/internalAuth.middleware';
 
 app.get('/', (req, res) => {
     res.send({ 'message': 'Hello API'});
 });
 
-app.use('/auth', authRouter);
+// Protect all auth routes from direct access
+app.use('/auth', internalAuthMiddleware, authRouter);
 
 app.get("/health" , (req , res) => {
     res.status(200).json(

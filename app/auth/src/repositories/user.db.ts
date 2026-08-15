@@ -31,6 +31,7 @@ class User {
     const { name, email, password, type } = details;
 
     try {
+      const crypto = require("crypto");
       await this.db.user.create({
         data: {
           name: name,
@@ -38,7 +39,7 @@ class User {
           password: password,
           is_verified: false,
           type: type,
-          refresh_token: "" 
+          refresh_token: crypto.randomUUID() 
         },
       });
     } catch (err: any) {

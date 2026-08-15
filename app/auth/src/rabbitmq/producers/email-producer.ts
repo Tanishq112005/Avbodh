@@ -1,4 +1,4 @@
-import { appRabbitMQ } from "../../main"; 
+import { appRabbitMQ } from "../client"; 
 import { NotificationMessage, RabbitMQProducer } from "@avbodh/typescript";
 import { QUEUE_EXCHANGE , QUEUE_ROUTING_EMAIL } from "../../config/env";
 

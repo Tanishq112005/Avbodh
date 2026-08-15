@@ -1,8 +1,20 @@
 import dotenv from 'dotenv';
 import path from 'path';
 
+import fs from 'fs';
 process.env.DOTENV_QUIET = 'true';
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+
+// Nx can run this from the workspace root or the app root, so we check both!
+const envPaths = [
+  path.join(process.cwd(), '.env'),
+  path.join(process.cwd(), 'app/auth/.env')
+];
+for (const p of envPaths) {
+  if (fs.existsSync(p)) {
+    dotenv.config({ path: p });
+    break;
+  }
+}
 
 function requireEnv(key: string): string {
   const value = process.env[key];
@@ -28,7 +40,7 @@ export const {
   REDIS_HOST,
   REDIS_PORT,
   GOOGLE_AUTH_PASSWORD,
-
+  INTERNAL_API_SECRET,
   OTP_EXPIRE_TIME,
   SALT_ROUND,
   MAX_ATTEMENTS,

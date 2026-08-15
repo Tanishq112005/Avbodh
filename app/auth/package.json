@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@avbodh/source": "file:../.."
+  }
+}

@@ -71,6 +71,7 @@ export class AuthController {
       const payload: NotificationMessage = new NotificationBuilder()
         .setToEmail(email)
         .setSubject('Verify Account')
+        .setType('EMAIL')
         .setContent(
           `Your verification OTP is ${otp} and it will expire after ${
             otp_expire_time / 60
@@ -87,9 +88,10 @@ export class AuthController {
       console.log('Saved to Redis');
       return res.status(200).json(new ApiResponse('OTP is Sent Successfully'));
     } catch (err: any) {
+      console.error("Signup Error:", err);
       return res
         .status(500)
-        .json(new ApiError('Error in user creation or sending the OTP', err));
+        .json(new ApiError('Error in user creation or sending the OTP', err.message || err));
     }
   };
   
@@ -203,6 +205,7 @@ export class AuthController {
         const payload: NotificationMessage = new NotificationBuilder()
           .setToEmail(email)
           .setSubject('Forgot Password OTP')
+          .setType('EMAIL')
           .setContent(
             `OTP To Reset Password is ${otp}, it will expire after ${
               otp_expire_time / 60

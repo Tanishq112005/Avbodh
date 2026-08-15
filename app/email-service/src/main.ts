@@ -41,3 +41,6 @@ async function startServer() {
         console.log(`[ ready ] http://${host}:${port}`);
     });
 }
+
+// You forgot to actually call the function!
+startServer();

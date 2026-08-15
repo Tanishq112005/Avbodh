@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     EMBEDDING_MODEL: str | None = None 
     GROQ_API_KEY : str | None = None 
     HUGGINGFACEHUG_API_TOKEN: str 
+    INTERNAL_API_SECRET: str | None = 'dev-secret'
     
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
     

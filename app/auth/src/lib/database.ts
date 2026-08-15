@@ -15,10 +15,8 @@ function createNeonAdapter() {
     throw new Error('Missing required environment variable: "DATABASE_URL_PRODUCTION" or "DATABASE_URL"');
   }
 
- 
-  const pool: any  = new Pool({ connectionString: connectionUrl });
-
-  return new PrismaNeon(pool);
+  // PrismaNeon constructor expects a neon.PoolConfig, NOT a Pool instance!
+  return new PrismaNeon({ connectionString: connectionUrl });
 }
 
 class Database {
