@@ -1,4 +1,4 @@
-import { rabbitMQClient } from "../connection"; 
+import { appRabbitMQ } from "../../main"; 
 import { NotificationMessage } from "@avbodh/typescript";
 import { QUEUE_EXCHANGE , QUEUE_ROUTING_EMAIL } from "../../config/env";
 export class EmailProducer {
@@ -6,7 +6,7 @@ export class EmailProducer {
 
   async send(data: NotificationMessage) {
     try {
-      const channel = await rabbitMQClient.getChannel(); 
+      const channel = await appRabbitMQ.getChannel(); 
       console.log(data); 
       console.log("From the producer");
       

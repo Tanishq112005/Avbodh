@@ -1,5 +1,4 @@
 import client, { Connection, Channel } from "amqplib";
-import { QUEUE_URL } from "../config/env";
 import { ApiError } from "@avbodh/typescript";
 
 class RabbitMQClient {
@@ -10,18 +9,23 @@ class RabbitMQClient {
   private reconnecting: boolean = false; 
   private readonly MAX_RECONNECT_ATTEMPTS = 10;
   private readonly RECONNECT_DELAY_MS = 5000;
+  private api_key : any = null ; 
+  
+  constructor(api_key: string) {
+    this.api_key = api_key;
+  }
 
   async connect() {
     if (this.connected && this.channel) return;
 
     try {
       console.log(`Connecting to RabbitMQ... (Attempt ${this.reconnectAttempts + 1})`);
-
-      if (!QUEUE_URL) {
+       
+      if (!this.api_key) {
         throw new Error("FATAL: QUEUE URL is undefined. Check .env.dev loading.");
       }
 
-      this.connection = await client.connect(QUEUE_URL);
+      this.connection = await client.connect(this.api_key);
       this.channel = await this.connection.createChannel();
       this.connected = true;
       this.reconnecting = false;
@@ -48,12 +52,15 @@ class RabbitMQClient {
         this.handleDisconnect();
       });
 
+      return this; // Return the client instance here!
+
     } catch (error: any) {
       console.error("Queue Connection Failed:", error.message);
       this.connected = false;
       this.channel = null;
       this.connection = null;
       await this.scheduleReconnect();
+      return this; // Return the client instance even if reconnecting
     }
   }
 
@@ -114,4 +121,4 @@ class RabbitMQClient {
   }
 }
 
-export const rabbitMQClient = new RabbitMQClient();
+export { RabbitMQClient };
