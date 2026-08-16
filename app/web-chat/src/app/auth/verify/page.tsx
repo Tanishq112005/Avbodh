@@ -1,8 +1,8 @@
-import { ForgotPasswordForm } from '@/modules/auth';
+import { OtpVerificationForm } from '@/modules/auth';
 import { GalleryVerticalEnd } from 'lucide-react';
 import React from 'react';
 
-export default function ForgotPasswordPage() {
+export default function VerifyOtpPage() {
   return (
     <div className="grid h-screen overflow-hidden lg:grid-cols-2 bg-black text-white selection:bg-indigo-500/30">
       <div className="flex flex-col gap-4 p-4 md:p-6 lg:p-8 z-10 relative">
@@ -16,7 +16,9 @@ export default function ForgotPasswordPage() {
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-sm">
-            <ForgotPasswordForm />
+            <React.Suspense fallback={<div>Loading...</div>}>
+              <OtpVerificationForm />
+            </React.Suspense>
           </div>
         </div>
       </div>
