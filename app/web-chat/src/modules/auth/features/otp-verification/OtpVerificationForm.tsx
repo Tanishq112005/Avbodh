@@ -48,7 +48,7 @@ export function OtpVerificationForm({
         const data = await authService.verifySignupOtp({ email, otp })
         // Set user as authenticated (using empty user for now, or decode token)
         setUser({ id: "1", name: "User", email: email }) 
-        router.push("/chat")
+        router.push("/agent")
       } else {
         const result = await authService.verifyForgotPasswordOtp({ email, otp })
         const token = result.data?.accessToken

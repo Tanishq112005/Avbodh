@@ -35,7 +35,7 @@ export function LoginForm({
       const data = await authService.login({ email, password, remberMe })
       setUser({ id: "1", name: "User", email: email }) 
       toast.success("Successfully logged in!")
-      router.push("/chat")
+      router.push("/agent")
     } catch (err: any) {
       toast.error(err.message || "Failed to log in.")
     } finally {
