@@ -22,7 +22,7 @@ export function ForgotPasswordForm({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (email) {
-      router.push(`/auth/verify?email=${encodeURIComponent(email)}`)
+      router.push(`/auth/verify?email=${encodeURIComponent(email)}&type=forgot-password`)
     }
   }
 

@@ -44,7 +44,7 @@ export function SignupForm({
       setLoading(true)
       await authService.signup({ name, email, password })
       // Redirect to OTP verify after successful signup request
-      router.push(`/auth/verify?email=${encodeURIComponent(email)}`)
+      router.push(`/auth/verify?email=${encodeURIComponent(email)}&type=signup`)
     } catch (err: any) {
       setError(err.message || "Something went wrong during signup.")
     } finally {

@@ -4,6 +4,9 @@ import { RefreshCwIcon } from "lucide-react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { useState } from "react"
+import { authService } from "../../api/auth.service"
+import { useAuthStore } from "../../store/useAuthStore"
 import {
   Field,
   FieldDescription,
@@ -24,11 +27,38 @@ export function OtpVerificationForm({
   const searchParams = useSearchParams()
   const router = useRouter()
   const email = searchParams.get("email") || "your email address"
+  const type = searchParams.get("type") || "signup"
+  
+  const [otp, setOtp] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const setUser = useAuthStore((state) => state.setUser)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Redirect to reset password after OTP verification
-    router.push(`/auth/reset-password?email=${encodeURIComponent(email)}`)
+    setError(null)
+
+    if (otp.length !== 6) {
+      setError("Please enter all 6 digits.")
+      return
+    }
+
+    try {
+      setLoading(true)
+      if (type === "signup") {
+        const data = await authService.verifySignupOtp({ email, otp })
+        // Set user as authenticated (using empty user for now, or decode token)
+        setUser({ id: "1", name: "User", email: email }) 
+        router.push("/")
+      } else {
+        await authService.verifyForgotPasswordOtp({ email, otp })
+        router.push(`/auth/reset-password?email=${encodeURIComponent(email)}`)
+      }
+    } catch (err: any) {
+      setError(err.message || "Failed to verify code.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -54,7 +84,7 @@ export function OtpVerificationForm({
           </div>
           
           <div className="flex justify-center py-2">
-            <InputOTP maxLength={6} id="otp-verification" required>
+            <InputOTP maxLength={6} id="otp-verification" required value={otp} onChange={(value) => setOtp(value)}>
               <InputOTPGroup className="*:data-[slot=input-otp-slot]:h-12 *:data-[slot=input-otp-slot]:w-11 *:data-[slot=input-otp-slot]:text-xl">
                 <InputOTPSlot index={0} />
                 <InputOTPSlot index={1} />
@@ -69,14 +99,20 @@ export function OtpVerificationForm({
             </InputOTP>
           </div>
           
-          <FieldDescription className="text-center">
+          {error && (
+            <div className="text-sm font-medium text-red-500 text-center mt-2">
+              {error}
+            </div>
+          )}
+          
+          <FieldDescription className="text-center mt-2">
             <a href="/auth/signup" className="underline underline-offset-4">I no longer have access to this email address.</a>
           </FieldDescription>
         </Field>
         
         <Field>
-          <Button type="submit" className="w-full">
-            Verify
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? "Verifying..." : "Verify"}
           </Button>
           <div className="text-sm text-center text-muted-foreground mt-2">
             Having trouble signing in?{" "}
