@@ -4,6 +4,10 @@
 const nextConfig = {
   // Next.js options go here
   // See: https://nextjs.org/docs/app/api-reference/config/next-config-js
+  devIndicators: {
+    buildActivity: false,
+    appIsrStatus: false,
+  },
 };
 
 module.exports = nextConfig;
