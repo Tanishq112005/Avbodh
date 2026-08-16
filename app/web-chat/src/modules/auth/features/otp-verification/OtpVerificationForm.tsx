@@ -1,7 +1,7 @@
 "use client";
 
 import { RefreshCwIcon } from "lucide-react"
-import { useSearchParams } from "next/navigation"
+import { useSearchParams, useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -22,10 +22,17 @@ export function OtpVerificationForm({
   ...props
 }: React.ComponentProps<"form">) {
   const searchParams = useSearchParams()
+  const router = useRouter()
   const email = searchParams.get("email") || "your email address"
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    // Redirect to reset password after OTP verification
+    router.push(`/auth/reset-password?email=${encodeURIComponent(email)}`)
+  }
+
   return (
-    <form className={cn("flex flex-col gap-6", className)} {...props}>
+    <form className={cn("flex flex-col gap-6", className)} onSubmit={handleSubmit} {...props}>
       <FieldGroup className="gap-6">
         <div className="flex flex-col items-center gap-1 text-center">
           <h1 className="text-2xl font-bold">Verify your login</h1>

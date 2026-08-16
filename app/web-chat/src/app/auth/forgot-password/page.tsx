@@ -11,7 +11,7 @@ export default function ForgotPasswordPage() {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/20">
               <GalleryVerticalEnd className="size-5" />
             </div>
-            Acme Chat
+             Avbodh AI
           </a>
         </div>
         <div className="flex flex-1 items-center justify-center">
