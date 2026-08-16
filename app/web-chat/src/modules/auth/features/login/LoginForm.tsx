@@ -92,7 +92,6 @@ export function LoginForm({
               Remember me
             </label>
           </div>
-          </div>
         </Field>
 
         <Field>

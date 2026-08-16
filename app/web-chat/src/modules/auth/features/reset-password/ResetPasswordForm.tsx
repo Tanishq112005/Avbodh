@@ -11,6 +11,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useState } from "react"
+import { toast } from "sonner"
 import { authService } from "../../api/auth.service"
 
 export function ResetPasswordForm({
@@ -24,33 +25,32 @@ export function ResetPasswordForm({
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError(null)
 
     if (!token) {
-      setError("Missing reset token. Please request a new link.")
+      toast.error("Missing reset token. Please request a new link.")
       return
     }
 
     if (password.length < 8) {
-      setError("Password must be at least 8 characters long.")
+      toast.error("Password must be at least 8 characters long.")
       return
     }
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match.")
+      toast.error("Passwords do not match.")
       return
     }
 
     try {
       setLoading(true)
       await authService.resetPassword({ password }, token)
+      toast.success("Password reset successfully!")
       router.push('/auth/login')
     } catch (err: any) {
-      setError(err.message || "Failed to reset password.")
+      toast.error(err.message || "Failed to reset password.")
     } finally {
       setLoading(false)
     }
@@ -91,12 +91,6 @@ export function ResetPasswordForm({
           />
           <FieldDescription>Please confirm your password.</FieldDescription>
         </Field>
-        
-        {error && (
-          <div className="text-sm font-medium text-red-500 text-center">
-            {error}
-          </div>
-        )}
         
         <Field>
           <Button type="submit" className="w-full" disabled={loading}>

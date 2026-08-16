@@ -25,6 +25,13 @@ export function generateRefershToken(payload : jwtPayloadRefershToken , expireTi
     return jwt.sign(payload, jwtConfigRefershToken.secret_key, options);
 }
 
+export function verifyAccessToken(token: string) {
+    try {
+        return jwt.verify(token, jwtConfigAccessToken.secret_key) as jwtPayloadAccessToken;
+    } catch (error) {
+        return null;
+    }
+}
 
 
 

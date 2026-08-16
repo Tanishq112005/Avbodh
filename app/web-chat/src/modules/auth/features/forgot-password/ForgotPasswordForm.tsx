@@ -11,6 +11,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { toast } from "sonner"
 import { authService } from "../../api/auth.service"
 
 export function ForgotPasswordForm({
@@ -20,19 +21,18 @@ export function ForgotPasswordForm({
   const router = useRouter()
   const [email, setEmail] = useState("")
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError(null)
 
     if (email) {
       try {
         setLoading(true)
         await authService.forgotPassword({ email })
+        toast.success("Reset link sent!")
         router.push(`/auth/verify?email=${encodeURIComponent(email)}&type=forgot-password`)
       } catch (err: any) {
-        setError(err.message || "Failed to send reset link.")
+        toast.error(err.message || "Failed to send reset link.")
       } finally {
         setLoading(false)
       }
@@ -59,11 +59,6 @@ export function ForgotPasswordForm({
             onChange={(e) => setEmail(e.target.value)}
           />
         </Field>
-        {error && (
-          <div className="text-sm font-medium text-red-500 text-center">
-            {error}
-          </div>
-        )}
         <Field>
           <Button type="submit" disabled={loading}>
             {loading ? "Sending..." : "Send Reset Link"}

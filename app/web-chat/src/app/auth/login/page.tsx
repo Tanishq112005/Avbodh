@@ -4,8 +4,8 @@ import React from 'react';
 
 export default function LoginPage() {
   return (
-    <div className="grid h-screen overflow-hidden lg:grid-cols-2 bg-black text-white selection:bg-indigo-500/30">
-      <div className="flex flex-col gap-4 p-4 md:p-6 lg:p-8 z-10 relative">
+    <div className="grid min-h-screen lg:grid-cols-2 bg-[#111111] text-white selection:bg-indigo-500/30">
+      <div className="flex flex-col p-6 md:p-10 lg:p-16 z-10 relative h-screen overflow-y-auto">
         <div className="flex justify-center gap-2 md:justify-start">
           <a href="#" className="flex items-center gap-2 font-bold text-xl tracking-tight">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/20">
@@ -21,14 +21,16 @@ export default function LoginPage() {
         </div>
       </div>
       
-      {/* Right side: Vibrant Image Placeholder space */}
-      <div className="relative hidden lg:block overflow-hidden bg-zinc-950 border-l border-white/5">
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/20 via-purple-900/20 to-black pointer-events-none" />
-        
-        {/* Placeholder for actual image - User can replace src later */}
-        <div className="absolute inset-0 flex items-center justify-center flex-col gap-6 opacity-40">
-           <div className="w-64 h-64 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 blur-3xl animate-pulse" />
-           <p className="text-zinc-500 text-sm tracking-widest uppercase font-semibold">Image Space Here</p>
+      {/* Right side: Floating Image/Video Canvas */}
+      <div className="relative hidden lg:flex items-center justify-center p-6 lg:p-8 xl:p-10 h-screen">
+        <div className="relative w-full h-full overflow-hidden rounded-3xl bg-zinc-900 border border-white/5 shadow-2xl">
+          <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/30 via-purple-900/30 to-black pointer-events-none" />
+          
+          {/* Placeholder for actual image/video - User can replace src later */}
+          <div className="absolute inset-0 flex items-center justify-center flex-col gap-6 opacity-50">
+             <div className="w-72 h-72 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 blur-3xl animate-pulse" />
+             <p className="text-zinc-500 text-sm tracking-widest uppercase font-semibold">Image / Video Space</p>
+          </div>
         </div>
       </div>
     </div>
