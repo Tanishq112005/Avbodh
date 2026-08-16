@@ -12,18 +12,43 @@ import {
 import { Input } from "@/components/ui/input"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { authService } from "../../api/auth.service"
 
 export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
   const router = useRouter()
+  const [name, setName] = useState("")
   const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (email) {
+    setError(null)
+
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters long.")
+      return
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.")
+      return
+    }
+
+    try {
+      setLoading(true)
+      await authService.signup({ name, email, password })
+      // Redirect to OTP verify after successful signup request
       router.push(`/auth/verify?email=${encodeURIComponent(email)}`)
+    } catch (err: any) {
+      setError(err.message || "Something went wrong during signup.")
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -38,7 +63,14 @@ export function SignupForm({
         </div>
         <Field>
           <FieldLabel htmlFor="name">Full Name</FieldLabel>
-          <Input id="name" type="text" placeholder="John Doe" required />
+          <Input 
+            id="name" 
+            type="text" 
+            placeholder="John Doe" 
+            required 
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
         </Field>
         <Field>
           <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -54,18 +86,39 @@ export function SignupForm({
         </Field>
         <Field>
           <FieldLabel htmlFor="password">Password</FieldLabel>
-          <Input id="password" type="password" required />
+          <Input 
+            id="password" 
+            type="password" 
+            required 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
           <FieldDescription>
             Must be at least 8 characters long.
           </FieldDescription>
         </Field>
         <Field>
           <FieldLabel htmlFor="confirm-password">Confirm Password</FieldLabel>
-          <Input id="confirm-password" type="password" required />
+          <Input 
+            id="confirm-password" 
+            type="password" 
+            required 
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
           <FieldDescription>Please confirm your password.</FieldDescription>
         </Field>
+        
+        {error && (
+          <div className="text-sm font-medium text-red-500 text-center">
+            {error}
+          </div>
+        )}
+
         <Field>
-          <Button type="submit">Create Account</Button>
+          <Button type="submit" disabled={loading}>
+            {loading ? "Creating account..." : "Create Account"}
+          </Button>
         </Field>
         <FieldSeparator>Or continue with</FieldSeparator>
         <Field>
