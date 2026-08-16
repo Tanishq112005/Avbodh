@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { authService } from "../../api/auth.service"
 import { useAuthStore } from "../../store/useAuthStore"
+import { toast } from "sonner"
 import {
   Field,
   FieldDescription,
@@ -31,15 +32,13 @@ export function OtpVerificationForm({
   
   const [otp, setOtp] = useState("")
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
   const setUser = useAuthStore((state) => state.setUser)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError(null)
 
     if (otp.length !== 6) {
-      setError("Please enter all 6 digits.")
+      toast.error("Please enter all 6 digits.")
       return
     }
 
@@ -49,14 +48,32 @@ export function OtpVerificationForm({
         const data = await authService.verifySignupOtp({ email, otp })
         // Set user as authenticated (using empty user for now, or decode token)
         setUser({ id: "1", name: "User", email: email }) 
-        router.push("/")
+        router.push("/chat")
       } else {
         const result = await authService.verifyForgotPasswordOtp({ email, otp })
         const token = result.data?.accessToken
+        toast.success("OTP verified!")
         router.push(`/auth/reset-password?email=${encodeURIComponent(email)}&token=${token || ''}`)
       }
     } catch (err: any) {
-      setError(err.message || "Failed to verify code.")
+      toast.error(err.message || "Failed to verify code.")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleResend = async () => {
+    try {
+      setLoading(true)
+      if (type === "signup") {
+        // We pass dummy values for name/password since backend only needs email for an existing unverified user to resend OTP
+        await authService.signup({ name: "User", email, password: "DummyPassword123!" })
+      } else {
+        await authService.forgotPassword({ email })
+      }
+      toast.success("A new verification code has been sent!")
+    } catch (err: any) {
+      toast.error(err.message || "Failed to resend code.")
     } finally {
       setLoading(false)
     }
@@ -78,7 +95,7 @@ export function OtpVerificationForm({
             <FieldLabel htmlFor="otp-verification">
               Verification code
             </FieldLabel>
-            <Button variant="outline" size="sm" className="h-8">
+            <Button variant="outline" size="sm" className="h-8" type="button" onClick={handleResend} disabled={loading}>
               <RefreshCwIcon className="mr-2 h-3.5 w-3.5" />
               Resend Code
             </Button>
@@ -99,12 +116,6 @@ export function OtpVerificationForm({
               </InputOTPGroup>
             </InputOTP>
           </div>
-          
-          {error && (
-            <div className="text-sm font-medium text-red-500 text-center mt-2">
-              {error}
-            </div>
-          )}
           
           <FieldDescription className="text-center mt-2">
             <a href="/auth/signup" className="underline underline-offset-4">I no longer have access to this email address.</a>

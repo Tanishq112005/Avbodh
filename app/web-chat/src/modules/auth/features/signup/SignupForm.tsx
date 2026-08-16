@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { toast } from "sonner"
 import { authService } from "../../api/auth.service"
 
 export function SignupForm({
@@ -24,29 +25,28 @@ export function SignupForm({
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError(null)
 
     if (password.length < 8) {
-      setError("Password must be at least 8 characters long.")
+      toast.error("Password must be at least 8 characters long.")
       return
     }
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match.")
+      toast.error("Passwords do not match.")
       return
     }
 
     try {
       setLoading(true)
       await authService.signup({ name, email, password })
+      toast.success("Account created successfully!")
       // Redirect to OTP verify after successful signup request
       router.push(`/auth/verify?email=${encodeURIComponent(email)}&type=signup`)
     } catch (err: any) {
-      setError(err.message || "Something went wrong during signup.")
+      toast.error(err.message || "Something went wrong during signup.")
     } finally {
       setLoading(false)
     }
@@ -109,12 +109,6 @@ export function SignupForm({
           <FieldDescription>Please confirm your password.</FieldDescription>
         </Field>
         
-        {error && (
-          <div className="text-sm font-medium text-red-500 text-center">
-            {error}
-          </div>
-        )}
-
         <Field>
           <Button type="submit" disabled={loading}>
             {loading ? "Creating account..." : "Create Account"}

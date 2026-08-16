@@ -2,6 +2,7 @@ console.log("---- API GATEWAY STARTING ----");
 import express from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import { ApiResponse } from '@avbodh/typescript';
 import {
   HOST,
@@ -18,6 +19,10 @@ const port = PORT ? Number(PORT) : 3000;
 const host = HOST ?? 'localhost';
 
 // Middleware Setup
+app.use(cors({
+  origin: ['http://localhost:4200', 'http://localhost:3000'], // Add your frontend origins here
+  credentials: true,
+}));
 app.use(cookieParser());
 app.use(globalRateLimiter);
 

@@ -36,7 +36,6 @@ export class AuthController {
 
   public createUser = async (req: any, res: any) => {
     const { name, email, password, type } = req.body;
-
     try {
       // step-1: first creating the hashpassword
       const hashedPassword: string = await hashPassword(password);

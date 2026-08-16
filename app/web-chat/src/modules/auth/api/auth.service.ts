@@ -7,7 +7,8 @@ export const authService = {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ ...data, type: 'USER' }),
+      credentials: 'include',
+      body: JSON.stringify({ ...data, type: 'User' }),
     });
 
     const result = await response.json();
@@ -25,6 +26,7 @@ export const authService = {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(data),
     });
 
@@ -43,6 +45,7 @@ export const authService = {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(data),
     });
 
@@ -61,6 +64,7 @@ export const authService = {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(data),
     });
 
@@ -79,6 +83,7 @@ export const authService = {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(data),
     });
 
@@ -98,6 +103,7 @@ export const authService = {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
+      credentials: 'include',
       body: JSON.stringify(data),
     });
 
