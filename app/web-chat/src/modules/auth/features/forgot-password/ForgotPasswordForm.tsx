@@ -11,6 +11,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { authService } from "../../api/auth.service"
 
 export function ForgotPasswordForm({
   className,
@@ -18,11 +19,23 @@ export function ForgotPasswordForm({
 }: React.ComponentProps<"form">) {
   const router = useRouter()
   const [email, setEmail] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setError(null)
+
     if (email) {
-      router.push(`/auth/verify?email=${encodeURIComponent(email)}&type=forgot-password`)
+      try {
+        setLoading(true)
+        await authService.forgotPassword({ email })
+        router.push(`/auth/verify?email=${encodeURIComponent(email)}&type=forgot-password`)
+      } catch (err: any) {
+        setError(err.message || "Failed to send reset link.")
+      } finally {
+        setLoading(false)
+      }
     }
   }
 
@@ -46,8 +59,15 @@ export function ForgotPasswordForm({
             onChange={(e) => setEmail(e.target.value)}
           />
         </Field>
+        {error && (
+          <div className="text-sm font-medium text-red-500 text-center">
+            {error}
+          </div>
+        )}
         <Field>
-          <Button type="submit">Send Reset Link</Button>
+          <Button type="submit" disabled={loading}>
+            {loading ? "Sending..." : "Send Reset Link"}
+          </Button>
         </Field>
         <Field>
           <FieldDescription className="text-center">

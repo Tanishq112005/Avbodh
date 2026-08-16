@@ -71,5 +71,23 @@ export const authService = {
     }
     
     return result;
+  },
+
+  async forgotPassword(data: { email: string }) {
+    const response = await fetch(`${API_URL}/forgot-password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(result.message || result.error || 'Failed to send reset email');
+    }
+    
+    return result;
   }
 };
