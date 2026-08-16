@@ -6,7 +6,7 @@ export default function VerifyOtpPage() {
   return (
     <div className="grid min-h-screen lg:grid-cols-2 bg-[#111111] text-white selection:bg-indigo-500/30">
       <div className="flex flex-col p-6 md:p-10 lg:p-16 z-10 relative h-screen overflow-y-auto">
-        <div className="flex justify-center gap-2 md:justify-start">
+        <div className="absolute top-8 left-8 md:top-10 md:left-12 flex items-center gap-2">
           <a href="#" className="flex items-center gap-2 font-bold text-xl tracking-tight">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/20">
               <GalleryVerticalEnd className="size-5" />
