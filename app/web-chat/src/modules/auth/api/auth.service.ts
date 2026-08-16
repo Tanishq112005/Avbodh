@@ -89,5 +89,24 @@ export const authService = {
     }
     
     return result;
+  },
+
+  async resetPassword(data: { password: string }, token: string) {
+    const response = await fetch(`${API_URL}/reset-password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(result.message || result.error || 'Failed to reset password');
+    }
+    
+    return result;
   }
 };

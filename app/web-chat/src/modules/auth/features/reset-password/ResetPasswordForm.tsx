@@ -9,21 +9,31 @@ import {
   FieldDescription,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useState } from "react"
+import { authService } from "../../api/auth.service"
 
 export function ResetPasswordForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const token = searchParams.get("token") || ""
+
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
+
+    if (!token) {
+      setError("Missing reset token. Please request a new link.")
+      return
+    }
 
     if (password.length < 8) {
       setError("Password must be at least 8 characters long.")
@@ -35,8 +45,15 @@ export function ResetPasswordForm({
       return
     }
 
-    // Simulated successful reset, redirect to login
-    router.push('/auth/login')
+    try {
+      setLoading(true)
+      await authService.resetPassword({ password }, token)
+      router.push('/auth/login')
+    } catch (err: any) {
+      setError(err.message || "Failed to reset password.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -82,8 +99,8 @@ export function ResetPasswordForm({
         )}
         
         <Field>
-          <Button type="submit" className="w-full">
-            Reset Password
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? "Resetting..." : "Reset Password"}
           </Button>
         </Field>
       </FieldGroup>

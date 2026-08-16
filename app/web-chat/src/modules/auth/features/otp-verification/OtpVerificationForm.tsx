@@ -51,8 +51,9 @@ export function OtpVerificationForm({
         setUser({ id: "1", name: "User", email: email }) 
         router.push("/")
       } else {
-        await authService.verifyForgotPasswordOtp({ email, otp })
-        router.push(`/auth/reset-password?email=${encodeURIComponent(email)}`)
+        const result = await authService.verifyForgotPasswordOtp({ email, otp })
+        const token = result.data?.accessToken
+        router.push(`/auth/reset-password?email=${encodeURIComponent(email)}&token=${token || ''}`)
       }
     } catch (err: any) {
       setError(err.message || "Failed to verify code.")
