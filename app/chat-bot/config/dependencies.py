@@ -60,7 +60,6 @@ class Dependencies:
     def get_vector_client(cls):
         """Returns a singleton instance of the Vector DB client."""
         if cls._vector_client is None:
-            # Pass settings explicitely to the generic factory
             api_key = getattr(settings, "PINECONE_API_KEY", None)
             index_name = getattr(settings, "PINECONE_INDEX_NAME", None)
             cls._vector_client = VectorDBClientFactory.get_client(
@@ -73,7 +72,7 @@ class Dependencies:
     
     @classmethod
     async def get_mcp_tools(cls, user_id: str):
-        # abhi ke liye hardcoded — baad mein DB se user ke enabled connectors laoge
+     
         enabled_connectors = []
         
         if settings.GITHUB_PAT and settings.GITHUB_PAT != "your_github_pat_here":

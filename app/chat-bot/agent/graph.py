@@ -13,9 +13,7 @@ from services.chat_history import ChatHistoryService
 from avbodh_tools import AvbodhStepLogger
 
 
-# ---------------------------------------------------------------------------
-# Custom tools condition kyunki state key 'message' hai, 'messages' nahi
-# ---------------------------------------------------------------------------
+
 def custom_tools_condition(state: ChatBotStateSpace):
     messages = state.get("message", [])
     if not messages:
@@ -25,11 +23,10 @@ def custom_tools_condition(state: ChatBotStateSpace):
         return "tools"
     return END
 
-# ---------------------------------------------------------------------------
-# Graph builder — user-specific hai kyunki tools user ke connectors pe depend
-# karte hain, isliye module-load pe ek fixed graph nahi bana sakte.
-# Har naye user/session ke liye ye function call hogi.
-# ---------------------------------------------------------------------------
+
+
+
+### GRAPH BUILDER TOOL 
 async def build_chat_graph(user_id: str):
     tools = await Dependencies.get_mcp_tools(user_id)
 
@@ -39,7 +36,6 @@ async def build_chat_graph(user_id: str):
 
     g.add_edge(START, 'ChatNode')
 
-    # ★ REACT LOOP — LLM ne tool_calls bheji to 'tools' pe jao, warna END
     g.add_conditional_edges('ChatNode', custom_tools_condition, {"tools": "tools", END: END})
 
     # tool chalne ke baad WAPAS ChatNode — LLM result dekh kar decide karega
@@ -47,30 +43,32 @@ async def build_chat_graph(user_id: str):
     g.add_edge('tools', 'ChatNode')
 
     memory = MemorySaver()
-    return g.compile(checkpointer=memory)   # ★ ye line missing thi — return zaroori hai
+    return g.compile(checkpointer=memory)   
 
 
-# ---------------------------------------------------------------------------
-# Streaming entrypoint — router/chatBot.py isko call karta hai
-# ---------------------------------------------------------------------------
+
+
 async def stream_chat(message: str, thread_id: str = "1", user_id: str = "unknown"):
     """
     Async Generator — SSE format mein chat response stream karta hai.
     """
+    
+    
+    
     chatBot = await build_chat_graph(user_id)   # per-user tools ke saath graph
 
     config = {"configurable": {"thread_id": thread_id}}
 
     AvbodhStepLogger.log_query(thread_id, user_id, message)
 
-    # 1. MemorySaver mein pehle se state hai kya check karo
+  
     current_state = chatBot.get_state(config)
     messages_in_memory = current_state.values.get("message", [])
 
     input_messages = []
 
     if not messages_in_memory:
-        # Memory khaali hai (server restart hua hoga) — MongoDB se seed karo
+  
         try:
             history_doc = await ChatHistoryService.get_synchronized_history(user_id)
             threads = history_doc.get("threads", {})
@@ -87,7 +85,6 @@ async def stream_chat(message: str, thread_id: str = "1", user_id: str = "unknow
         except Exception as e:
             print(f"Failed to load chat history for LLM context: {e}")
 
-    # 2. current message add karo
     input_messages.append(HumanMessage(content=message))
 
     full_response = ""
@@ -101,7 +98,7 @@ async def stream_chat(message: str, thread_id: str = "1", user_id: str = "unknow
             if msg_chunk.content:
                 content = msg_chunk.content
                 if isinstance(content, list):
-                    # Some models/tool messages return a list of content blocks
+                 
                     content_str = "".join(
                         item.get("text", "") if isinstance(item, dict) else str(item) 
                         for item in content
@@ -111,14 +108,12 @@ async def stream_chat(message: str, thread_id: str = "1", user_id: str = "unknow
                     
                 if content_str:
                     full_response += content_str
-                    # For SSE stream we can yield chunks replacing newlines to avoid breaking the SSE format, 
-                    # but typically just sending the string works if clients parse it.
                     yield f"data: {content_str}\n\n"
                 await asyncio.sleep(0.01)
 
     AvbodhStepLogger.log_final_response(thread_id, user_id, full_response)
 
-    # Streaming khatam hone ke baad, RabbitMQ pe poora event publish karo
+  
     try:
         rabbitmq_client = Dependencies.get_rabbitmq_client()
         payload = {
