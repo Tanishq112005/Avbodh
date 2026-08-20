@@ -1,6 +1,7 @@
 from avbodh_tools.tools import AvbodhRabbitMQClient, VectorDBClientFactory, RedisClientFactory
 from avbodh_tools.chat_models.factory import ChatModelFactory
 from avbodh_tools.embedding_models.factory import EmbeddingModelFactory
+from avbodh_tools import AvbodhMCPClientFactory
 from .env import settings
 
 class Dependencies:
@@ -68,3 +69,23 @@ class Dependencies:
                 index_name=index_name
             )
         return cls._vector_client
+    
+    
+    @classmethod
+    async def get_mcp_tools(cls, user_id: str):
+        # abhi ke liye hardcoded — baad mein DB se user ke enabled connectors laoge
+        enabled_connectors = []
+        
+        if settings.GITHUB_PAT and settings.GITHUB_PAT != "your_github_pat_here":
+            enabled_connectors.append({
+                "connector_id": "github", 
+                "credentials": {"personal_access_token": settings.GITHUB_PAT}
+            })
+            
+        if settings.TAVILY_API_KEY and settings.TAVILY_API_KEY != "your_tavily_api_key_here":
+            enabled_connectors.append({
+                "connector_id": "tavily", 
+                "credentials": {"api_key": settings.TAVILY_API_KEY}
+            })
+            
+        return await AvbodhMCPClientFactory.get_tools(user_id, enabled_connectors)

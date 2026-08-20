@@ -34,7 +34,7 @@ export default function AgentChatPage() {
     <div className="flex flex-col h-screen bg-[#111111] text-foreground">
       {/* Header (Optional, keeping it minimal) */}
       <header className="flex items-center px-6 py-4 border-b border-border/10">
-        <h1 className="text-xl font-semibold tracking-tight">Agent</h1>
+        <h1 className="text-xl font-semibold tracking-tight">Avbodh AI</h1>
       </header>
 
       {/* Messages Area */}

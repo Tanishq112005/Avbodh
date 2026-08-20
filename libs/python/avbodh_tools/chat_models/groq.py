@@ -15,7 +15,7 @@ class Groq(IChatModels):
             print("Initalizing the model")
             self.model = ChatGroq(
                 api_key=self.api_key, 
-                model="llama-3.1-8b-instant", 
+                model="openai/gpt-oss-20b", 
                 temperature=0, 
                 timeout=None, 
                 max_retries=2
