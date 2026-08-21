@@ -40,11 +40,6 @@ export function ChatArea() {
 
   return (
     <div className="flex-1 flex flex-col h-full bg-[#111111] text-foreground relative overflow-hidden">
-      {/* Header */}
-      <header className="flex items-center px-4 md:px-6 py-3 md:py-4 border-b border-border/10 shrink-0 z-10 bg-[#111111]">
-        <h1 className="text-lg md:text-xl font-semibold tracking-tight">Avbodh AI</h1>
-      </header>
-
       {/* Main Content Area */}
       <div className="flex-1 overflow-y-auto relative z-0">
         <div className="mx-auto max-w-3xl px-3 md:px-6 lg:px-8 pt-4 md:pt-8 pb-32 md:pb-36">
@@ -75,7 +70,7 @@ export function ChatArea() {
       </div>
 
       {/* Floating Input Area */}
-      <div className="absolute inset-0 pointer-events-none flex flex-col z-10 pt-[60px] md:pt-[73px]">
+      <div className="absolute inset-0 pointer-events-none flex flex-col z-10 pt-4 md:pt-8">
         {/* Full-width docked background gradient */}
         <div className={`absolute inset-x-0 bottom-0 h-32 md:h-40 bg-gradient-to-t from-[#111111] via-[#111111]/80 to-transparent pointer-events-none transition-opacity duration-700 ${isNewChat ? 'opacity-0' : 'opacity-100'} z-0`} />
         
