@@ -1,6 +1,7 @@
 'use client';
 
 import { useChat } from '@ai-sdk/react';
+import { TextStreamChatTransport } from 'ai';
 import { useRef, useEffect, useState } from 'react';
 import { Bot } from 'lucide-react';
 import { ChatInput } from '@/components/chat-input';
@@ -11,8 +12,8 @@ import { getDynamicGreeting } from '@/lib/time';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export function ChatArea() {
-  const { messages, append, status, stop } = useChat({
-    api: '/api/chat',
+  const { messages, sendMessage, status, stop } = useChat({
+    transport: new TextStreamChatTransport({ api: '/api/chat' })
   });
 
   const [inputValue, setInputValue] = useState('');
@@ -21,7 +22,10 @@ export function ChatArea() {
   const submitForm = (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputValue.trim()) return;
-    append({ role: 'user', content: inputValue });
+    sendMessage({ 
+      role: 'user', 
+      parts: [{ type: 'text', text: inputValue }] 
+    });
     setInputValue('');
   };
 
@@ -50,7 +54,7 @@ export function ChatArea() {
                   return (
                     <UserMessage 
                       key={message.id} 
-                      content={message.content} 
+                      content={message.parts?.filter(p => p.type === 'text').map(p => (p as any).text).join('') || ''} 
                       attachments={(message as any).experimental_attachments}
                     />
                   );
@@ -59,7 +63,7 @@ export function ChatArea() {
                 return (
                   <AgentMessage 
                     key={message.id} 
-                    content={message.content} 
+                    content={message.parts?.filter(p => p.type === 'text').map(p => (p as any).text).join('') || ''} 
                   />
                 );
               })}

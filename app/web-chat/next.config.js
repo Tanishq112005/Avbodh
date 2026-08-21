@@ -4,10 +4,8 @@
 const nextConfig = {
   // Next.js options go here
   // See: https://nextjs.org/docs/app/api-reference/config/next-config-js
-  devIndicators: {
-    buildActivity: false,
-    appIsrStatus: false,
-  },
+  // Disable the development indicator to keep the UI clean
+  devIndicators: false,
 };
 
 module.exports = nextConfig;
