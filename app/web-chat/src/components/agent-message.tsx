@@ -9,15 +9,15 @@ interface AgentMessageProps {
 
 export function AgentMessage({ content }: AgentMessageProps) {
   return (
-    <div className="flex gap-4 justify-start mb-6 group">
-      <Avatar className="w-8 h-8 shrink-0 mt-1">
-        <AvatarFallback className="bg-primary/10 text-primary">
-          <Bot className="w-4 h-4" />
+    <div className="flex gap-2 sm:gap-4 justify-start mb-4 sm:mb-6 group">
+      <Avatar className="w-6 h-6 sm:w-8 sm:h-8 shrink-0 mt-1">
+        <AvatarFallback className="bg-primary/10 text-primary text-[10px] sm:text-xs">
+          <Bot className="w-3 h-3 sm:w-4 sm:h-4" />
         </AvatarFallback>
       </Avatar>
       
-      <div className="flex flex-col space-y-2 max-w-[90%] md:max-w-[85%] items-start">
-        <div className="prose prose-neutral dark:prose-invert max-w-none text-sm md:text-base leading-relaxed">
+      <div className="flex flex-col space-y-1 sm:space-y-2 max-w-[92%] sm:max-w-[90%] md:max-w-[85%] items-start">
+        <div className="prose prose-sm sm:prose-base prose-neutral dark:prose-invert max-w-none text-sm md:text-base leading-relaxed">
           <ReactMarkdown>{content}</ReactMarkdown>
         </div>
       </div>
