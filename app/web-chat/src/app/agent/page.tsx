@@ -3,10 +3,9 @@
 import { useChat } from '@ai-sdk/react';
 import { useRef, useEffect, useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { ArrowUp, Loader2, Bot, User } from 'lucide-react';
+import { Bot, User } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import { ChatInput } from '@/components/chat-input';
 
 export default function AgentChatPage() {
   const { messages, append, status, stop } = useChat({
@@ -101,52 +100,14 @@ export default function AgentChatPage() {
       </div>
 
       {/* Input Box Area */}
-      <div className="p-4 bg-[#111111]">
-        <div className="mx-auto max-w-3xl">
-          <form
-            onSubmit={submitForm}
-            className="relative flex items-center bg-muted/50 border rounded-full focus-within:ring-1 focus-within:ring-primary/50 shadow-sm transition-all"
-          >
-            <Input
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Message the agent..."
-              className="flex-1 bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 px-6 py-6 text-base rounded-full shadow-none"
-              disabled={status === 'submitted'}
-            />
-            
-            <div className="absolute right-2 flex items-center">
-              {isStreaming ? (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="rounded-full h-10 w-10 text-muted-foreground hover:bg-muted"
-                  onClick={() => stop()}
-                  title="Stop generating"
-                >
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                </Button>
-              ) : (
-                <Button
-                  type="submit"
-                  size="icon"
-                  disabled={!inputValue.trim() || isStreaming}
-                  className="rounded-full h-10 w-10 bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
-                >
-                  <ArrowUp className="w-5 h-5" />
-                  <span className="sr-only">Send message</span>
-                </Button>
-              )}
-            </div>
-          </form>
-          <div className="mt-2 text-center">
-             <p className="text-xs text-muted-foreground">
-               Agent can make mistakes. Consider verifying important information.
-             </p>
-          </div>
-        </div>
-      </div>
+      <ChatInput 
+        inputValue={inputValue}
+        setInputValue={setInputValue}
+        onSubmit={submitForm}
+        isStreaming={isStreaming}
+        status={status}
+        stop={stop}
+      />
     </div>
   );
 }
