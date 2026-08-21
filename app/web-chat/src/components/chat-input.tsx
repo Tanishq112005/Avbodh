@@ -21,8 +21,8 @@ export function ChatInput({
   stop
 }: ChatInputProps) {
   return (
-    <div className="p-4 bg-[#111111]">
-      <div className="mx-auto max-w-3xl">
+    <div className="w-full">
+      <div className="w-full">
         <form
           onSubmit={onSubmit}
           className="relative flex items-center bg-[#212121] border border-border/50 rounded-2xl focus-within:ring-1 focus-within:ring-primary/50 shadow-sm transition-all p-1"
