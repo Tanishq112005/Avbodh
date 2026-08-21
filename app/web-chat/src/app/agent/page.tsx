@@ -2,10 +2,10 @@
 
 import { useChat } from '@ai-sdk/react';
 import { useRef, useEffect, useState } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Bot, User } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
+import { Bot } from 'lucide-react';
 import { ChatInput } from '@/components/chat-input';
+import { UserMessage } from '@/components/user-message';
+import { AgentMessage } from '@/components/agent-message';
 
 export default function AgentChatPage() {
   const { messages, append, status, stop } = useChat({
@@ -50,50 +50,24 @@ export default function AgentChatPage() {
               </p>
             </div>
           ) : (
-            messages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex gap-4 ${
-                  message.role === 'user' ? 'justify-end' : 'justify-start'
-                }`}
-              >
-                {message.role === 'assistant' && (
-                  <Avatar className="w-8 h-8 shrink-0 mt-1">
-                    <AvatarFallback className="bg-primary/10 text-primary">
-                      <Bot className="w-4 h-4" />
-                    </AvatarFallback>
-                  </Avatar>
-                )}
-                
-                <div
-                  className={`flex flex-col space-y-2 max-w-[85%] md:max-w-[75%] ${
-                    message.role === 'user' ? 'items-end' : 'items-start'
-                  }`}
-                >
-                  <div
-                    className={`rounded-2xl px-5 py-3 ${
-                      message.role === 'user'
-                        ? 'bg-primary text-primary-foreground rounded-br-sm'
-                        : 'bg-muted text-foreground rounded-bl-sm prose prose-neutral dark:prose-invert max-w-none'
-                    }`}
-                  >
-                    {message.role === 'user' ? (
-                      <p className="whitespace-pre-wrap">{message.content}</p>
-                    ) : (
-                      <ReactMarkdown>{message.content}</ReactMarkdown>
-                    )}
-                  </div>
-                </div>
-
-                {message.role === 'user' && (
-                  <Avatar className="w-8 h-8 shrink-0 mt-1">
-                    <AvatarFallback className="bg-muted">
-                      <User className="w-4 h-4" />
-                    </AvatarFallback>
-                  </Avatar>
-                )}
-              </div>
-            ))
+            messages.map((message) => {
+              if (message.role === 'user') {
+                return (
+                  <UserMessage 
+                    key={message.id} 
+                    content={message.content} 
+                    attachments={(message as any).experimental_attachments}
+                  />
+                );
+              }
+              
+              return (
+                <AgentMessage 
+                  key={message.id} 
+                  content={message.content} 
+                />
+              );
+            })
           )}
           <div ref={messagesEndRef} />
         </div>
