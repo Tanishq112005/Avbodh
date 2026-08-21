@@ -6,6 +6,7 @@ import { Bot } from 'lucide-react';
 import { ChatInput } from '@/components/chat-input';
 import { UserMessage } from '@/components/user-message';
 import { AgentMessage } from '@/components/agent-message';
+import { getDynamicGreeting } from '@/lib/time';
 
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -15,6 +16,7 @@ export default function AgentChatPage() {
   });
 
   const [inputValue, setInputValue] = useState('');
+  const [greeting, setGreeting] = useState('Avbodh AI');
 
   const submitForm = (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,6 +30,12 @@ export default function AgentChatPage() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  // Set the greeting on the client-side to adapt to the user's local timezone
+  // and prevent hydration mismatch errors.
+  useEffect(() => {
+    setGreeting(getDynamicGreeting());
+  }, []);
 
   const isStreaming = status === 'streaming' || status === 'submitted';
   const isNewChat = messages.length === 0;
@@ -86,7 +94,7 @@ export default function AgentChatPage() {
                 >
                   <h2 className="text-2xl sm:text-3xl md:text-4xl font-medium tracking-tight text-foreground flex items-center gap-2 md:gap-3">
                     <Bot className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-primary" />
-                    Avbodh AI
+                    {greeting}
                   </h2>
                 </motion.div>
               )}
