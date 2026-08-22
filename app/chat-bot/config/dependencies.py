@@ -38,9 +38,7 @@ class Dependencies:
         
         if cls._chat_model is None:
             api_key = settings.GROQ_API_KEY
-            cls._chat_model = ChatModelFactory.get_method("groq", {
-                "access_key": api_key
-            })
+            cls._chat_model = ChatModelFactory.get_method("ollama" , {})
             
         return cls._chat_model
 

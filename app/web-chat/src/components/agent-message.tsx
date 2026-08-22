@@ -2,6 +2,7 @@ import React from 'react';
 import { Bot } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface AgentMessageProps {
   content: string;
@@ -17,8 +18,8 @@ export function AgentMessage({ content }: AgentMessageProps) {
       </Avatar>
       
       <div className="flex flex-col space-y-1 sm:space-y-2 max-w-[92%] sm:max-w-[90%] md:max-w-[85%] items-start">
-        <div className="prose prose-sm sm:prose-base prose-neutral dark:prose-invert max-w-none text-sm md:text-base leading-relaxed">
-          <ReactMarkdown>{content}</ReactMarkdown>
+        <div className="prose prose-sm sm:prose-base prose-neutral dark:prose-invert max-w-none text-sm md:text-base leading-relaxed overflow-x-auto">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
         </div>
       </div>
     </div>

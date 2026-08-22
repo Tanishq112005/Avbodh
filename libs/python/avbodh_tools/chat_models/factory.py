@@ -4,6 +4,7 @@ from .huggingFace import HuggingFace
 from langchain_groq import ChatGroq
 from ..schemas.groq import GroqChatModelConfig
 from .groq import Groq
+from .ollama import Ollama
 class ChatModelFactory:
     
     @staticmethod
@@ -25,13 +26,19 @@ class ChatModelFactory:
             )
             return model.getModel()
         
-        if model_type == "groq":
+        elif model_type == "groq":
             validated_data = GroqChatModelConfig(**config) 
             model = Groq()
             api_key = validated_data.access_key
             model.setModel(uri=api_key)
             
             return model.getModel()
+        
+        elif model_type == "ollama":
+            model = Ollama()
+            model.setModel() 
+            
+            return model.getModel() 
             
              
             

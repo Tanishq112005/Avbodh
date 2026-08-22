@@ -27,12 +27,14 @@ export async function POST(req: Request) {
       transform(chunk, controller) {
         buffer += new TextDecoder().decode(chunk, { stream: true });
         
-        const lines = buffer.split('\n');
-        buffer = lines.pop() || '';
+        // Python's SSE yields `data: {content}\n\n`. 
+        // We split by \n\n to preserve any internal \n that {content} might contain (like markdown tables).
+        const chunks = buffer.split('\n\n');
+        buffer = chunks.pop() || '';
         
-        for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            const content = line.slice(6);
+        for (const chunkStr of chunks) {
+          if (chunkStr.startsWith('data: ')) {
+            const content = chunkStr.slice(6);
             if (content.trim() === '[DONE]') continue;
             
             // Just enqueue the raw text!

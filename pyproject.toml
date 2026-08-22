@@ -23,6 +23,7 @@ package-mode = false
   numpy = "^2.5.2"
   pinecone = "^9.1.0"
   langchain-mcp-adapters = "^0.3.2"
+  langchain-ollama = "^1.1.0"
 
     [tool.poetry.dependencies.avbodh-tools]
     path = "libs/python"
