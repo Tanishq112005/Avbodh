@@ -22,4 +22,6 @@ class LoggingToolNode(ToolNode):
                 thread_id, user_id, getattr(msg, "name", "unknown"),
                 duration_ms, str(msg.content),
             )
-        return result
+        
+        print(f"[TIMER] Tools Node execution for thread '{thread_id}' took {duration_ms:.2f} ms")
+        return result

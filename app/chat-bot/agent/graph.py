@@ -60,16 +60,13 @@ async def stream_chat(message: str, thread_id: str = "1", user_id: str = "unknow
     
     
     
-    chatBot = await build_chat_graph(user_id)   # per-user tools ke saath graph
+    chatBot = await build_chat_graph(user_id) 
 
     config = {"configurable": {"thread_id": thread_id}}
-
-    AvbodhStepLogger.log_query(thread_id, user_id, message)
-
-  
+    AvbodhStepLogger.log_query(thread_id, user_id, message)  
     current_state = chatBot.get_state(config)
     messages_in_memory = current_state.values.get("message", [])
-
+    
     input_messages = []
 
     if not messages_in_memory:
@@ -115,7 +112,7 @@ async def stream_chat(message: str, thread_id: str = "1", user_id: str = "unknow
                 if content_str:
                     full_response += content_str
                     yield content_str
-                await asyncio.sleep(0.01)
+                
 
     AvbodhStepLogger.log_final_response(thread_id, user_id, full_response)
 

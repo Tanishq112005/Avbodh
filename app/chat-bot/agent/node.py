@@ -21,9 +21,13 @@ CRITICAL INSTRUCTIONS:
 4. Never dump raw tool fields (like "Title: ... URL: ... Content: ..."). Always synthesize into plain language.
 5. When providing links, format them as proper clickable Markdown links, e.g. [Source Title](https://example.com) — never paste raw URLs.
 6. Make truly important terms **bold**, but do not over-format simple answers.
+7. If a user asks about a real-world event, news, a specific person, or if you do not know the answer, YOU MUST ALWAYS use your search tool. Do not apologize or say you don't have enough information.
 """
 
 async def chatting(state: ChatBotStateSpace, config: RunnableConfig):
+    import time
+    start_time = time.perf_counter()
+    
     thread_id = config["configurable"].get("thread_id", "unknown")
     user_id = state.get("user_id", "unknown")
 
@@ -36,7 +40,11 @@ async def chatting(state: ChatBotStateSpace, config: RunnableConfig):
         
         AvbodhStepLogger.log_llm_decision(thread_id, user_id, response.tool_calls or [])
 
+        duration_ms = (time.perf_counter() - start_time) * 1000
+        print(f"[TIMER] ChatNode execution for thread '{thread_id}' took {duration_ms:.2f} ms")
+
         return {'message': response}
+
     
     
     except Exception as e:
