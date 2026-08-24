@@ -9,7 +9,7 @@ class Ollama(IChatModels):
         try:
             print("Initalizing the model")
             self.model = ChatOllama(
-                 model="qwen3:14b",
+                 model="llama3.1",
                  temperature=0,
                  reasoning=False,
                  num_predict=300,     

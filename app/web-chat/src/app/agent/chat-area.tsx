@@ -8,6 +8,7 @@ import { ChatInput } from '@/components/chat-input';
 import { UserMessage } from '@/components/user-message';
 import { AgentMessage } from '@/components/agent-message';
 import { ThinkingIndicator } from '@/components/thinking';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 import { getDynamicGreeting } from '@/lib/time';
 
 import { motion, AnimatePresence } from 'framer-motion';
@@ -52,7 +53,7 @@ export function ChatArea() {
   const isNewChat = messages.length === 0;
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-[#111111] text-foreground relative overflow-hidden">
+    <div className="flex-1 flex flex-col h-full bg-[#151515] text-foreground relative overflow-hidden">
       {/* Main Content Area */}
       <div className="flex-1 overflow-y-auto relative z-0">
         <div className="mx-auto max-w-3xl px-3 md:px-6 lg:px-8 pt-4 md:pt-8 pb-32 md:pb-36">
@@ -93,7 +94,7 @@ export function ChatArea() {
       {/* Floating Input Area */}
       <div className="absolute inset-0 pointer-events-none flex flex-col z-10 pt-4 md:pt-8">
         {/* Full-width docked background gradient */}
-        <div className={`absolute inset-x-0 bottom-0 h-32 md:h-40 bg-gradient-to-t from-[#111111] via-[#111111]/80 to-transparent pointer-events-none transition-opacity duration-700 ${isNewChat ? 'opacity-0' : 'opacity-100'} z-0`} />
+        <div className={`absolute inset-x-0 bottom-0 h-32 md:h-40 bg-gradient-to-t from-[#151515] via-[#151515]/80 to-transparent pointer-events-none transition-opacity duration-700 ${isNewChat ? 'opacity-0' : 'opacity-100'} z-0`} />
         
         <div className={`relative z-10 flex-1 flex flex-col w-full transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${isNewChat ? 'justify-center items-center pb-[10vh] md:pb-[15vh]' : 'justify-end pb-2 md:pb-4'}`}>
           <div className="pointer-events-auto w-full max-w-3xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
@@ -139,7 +140,7 @@ export function ChatArea() {
                         key={pill} 
                         type="button"
                         onClick={() => setInputValue(`Help me ${pill.toLowerCase()}`)}
-                        className="px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-border/50 bg-[#111111] hover:bg-muted text-xs md:text-sm text-muted-foreground transition-colors flex items-center gap-2 whitespace-nowrap"
+                        className="px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-border/50 bg-[#151515] hover:bg-muted text-xs md:text-sm text-muted-foreground transition-colors flex items-center gap-2 whitespace-nowrap"
                       >
                         {pill}
                       </button>

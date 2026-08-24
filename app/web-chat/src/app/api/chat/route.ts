@@ -13,7 +13,7 @@ export async function POST(req: Request) {
                           "";
 
     // Call our custom utility that hits {{CHAT_BOT}}/chat/stream
-    const response = await fetchChatBotStream(latestMessage, "4500");
+    const response = await fetchChatBotStream(latestMessage, "450015");
 
     if (!response.body) {
       return new Response("Empty response from Chat Bot", { status: 500 });
