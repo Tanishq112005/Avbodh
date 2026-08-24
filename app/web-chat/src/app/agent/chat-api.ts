@@ -28,3 +28,27 @@ export async function fetchChatBotStream(message: string, thread_id: string = "4
 
   return response;
 }
+
+export async function fetchChatHistory() {
+  const chatBotUrl = process.env.CHAT_BOT;
+  
+  if (!chatBotUrl) {
+    throw new Error("CHAT_BOT environment variable is not configured.");
+  }
+
+  const response = await fetch(`${chatBotUrl}/chat/history`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-internal-secret': 'hello',
+      'x-user-id': 'test-user-123'
+    }
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`History API error (${response.status}): ${errorText}`);
+  }
+
+  return response.json();
+}

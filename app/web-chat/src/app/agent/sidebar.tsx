@@ -15,9 +15,15 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { useChatStore } from '@/store/chat';
+import { useEffect } from 'react';
 
 export function Sidebar() {
   const createNewChat = useChatStore((s) => s.createNewChat);
+  const fetchRecentChats = useChatStore((s) => s.fetchRecentChats);
+
+  useEffect(() => {
+    fetchRecentChats();
+  }, [fetchRecentChats]);
 
   return (
     
