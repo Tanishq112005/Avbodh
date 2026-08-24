@@ -18,7 +18,7 @@ export function AgentMessage({ content }: AgentMessageProps) {
       </Avatar>
       
       <div className="flex flex-col space-y-1 sm:space-y-2 max-w-[92%] sm:max-w-[90%] md:max-w-[85%] items-start">
-        <div className="prose prose-sm sm:prose-base prose-neutral dark:prose-invert max-w-none text-sm md:text-base leading-relaxed overflow-x-auto">
+        <div className="prose prose-sm sm:prose-base prose-neutral dark:prose-invert max-w-none text-sm md:text-base leading-relaxed overflow-x-auto prose-a:text-blue-600 dark:prose-a:text-blue-400 hover:prose-a:underline">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
         </div>
       </div>

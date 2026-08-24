@@ -13,46 +13,15 @@ export async function POST(req: Request) {
                           "";
 
     // Call our custom utility that hits {{CHAT_BOT}}/chat/stream
-    const response = await fetchChatBotStream(latestMessage, "1");
+    const response = await fetchChatBotStream(latestMessage, "4500");
 
     if (!response.body) {
       return new Response("Empty response from Chat Bot", { status: 500 });
     }
 
     // The frontend is using TextStreamChatTransport, which renders raw text exactly as received.
-    // The Python backend emits Server-Sent Events (SSE) like `data: Hello\n\n`.
-    // We must extract just the raw text and stream it to the frontend.
-    let buffer = '';
-    const transformStream = new TransformStream({
-      transform(chunk, controller) {
-        buffer += new TextDecoder().decode(chunk, { stream: true });
-        
-        // Python's SSE yields `data: {content}\n\n`. 
-        // We split by \n\n to preserve any internal \n that {content} might contain (like markdown tables).
-        const chunks = buffer.split('\n\n');
-        buffer = chunks.pop() || '';
-        
-        for (const chunkStr of chunks) {
-          if (chunkStr.startsWith('data: ')) {
-            const content = chunkStr.slice(6);
-            if (content.trim() === '[DONE]') continue;
-            
-            // Just enqueue the raw text!
-            controller.enqueue(new TextEncoder().encode(content));
-          }
-        }
-      },
-      flush(controller) {
-        if (buffer.startsWith('data: ')) {
-          const content = buffer.slice(6);
-          if (content.trim() !== '[DONE]') {
-            controller.enqueue(new TextEncoder().encode(content));
-          }
-        }
-      }
-    });
-
-    return new Response(response.body.pipeThrough(transformStream), {
+    // The Python backend now emits pure text chunks, so we can pipe the stream directly!
+    return new Response(response.body, {
       headers: {
         'Content-Type': 'text/plain; charset=utf-8',
         'Cache-Control': 'no-cache',

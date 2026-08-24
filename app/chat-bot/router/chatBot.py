@@ -42,7 +42,7 @@ async def chat_stream_endpoint(
         # stream_chat is a generator, StreamingResponse consumes it and streams to the client
         return StreamingResponse(
             stream_chat(message=request.message, thread_id=request.thread_id, user_id=x_user_id),
-            media_type="text/event-stream"
+            media_type="text/plain"
         )
     except Exception as e:
         raise ApiError(

@@ -24,6 +24,7 @@ package-mode = false
   pinecone = "^9.1.0"
   langchain-mcp-adapters = "^0.3.2"
   langchain-ollama = "^1.1.0"
+  tzdata = "^2026.3"
 
     [tool.poetry.dependencies.avbodh-tools]
     path = "libs/python"

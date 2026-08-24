@@ -1,20 +1,21 @@
-from langchain_ollama import ChatOllama
+from langchain_google_genai import ChatGoogleGenerativeAI
 from .interfaces import IChatModels
+import os
+from dotenv import load_dotenv
 
-class Ollama(IChatModels):
+load_dotenv()
+
+
+class Google(IChatModels):
     
-    model : ChatOllama 
+    model : ChatGoogleGenerativeAI
     
     def setModel(self):
         try:
             print("Initalizing the model")
-            self.model = ChatOllama(
-                 model="qwen3:14b",
-                 temperature=0,
-                 reasoning=False,
-                 num_predict=300,     
-                 num_ctx=8192,
-            )
+            self.model = ChatGoogleGenerativeAI(
+               model="gemini-3.7-flash"
+             )
             
             print("Initilization is completed") 
         except Exception as e:

@@ -1,4 +1,4 @@
-export async function fetchChatBotStream(message: string, thread_id: string = "1") {
+export async function fetchChatBotStream(message: string, thread_id: string = "45") {
   const chatBotUrl = process.env.CHAT_BOT;
   
   if (!chatBotUrl) {

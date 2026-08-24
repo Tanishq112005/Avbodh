@@ -4,13 +4,15 @@ from langgraph.graph.message import add_messages
 from langgraph.prebuilt import tools_condition
 from langgraph.checkpoint.memory import MemorySaver
 from langchain_core.messages import HumanMessage, AIMessage
-
 from .state import ChatBotStateSpace
 from .node import chatting
 from .logging_tool_node import LoggingToolNode
 from config.dependencies import Dependencies
 from services.chat_history import ChatHistoryService
 from avbodh_tools import AvbodhStepLogger
+
+
+
 
 
 
@@ -22,6 +24,9 @@ def custom_tools_condition(state: ChatBotStateSpace):
     if hasattr(last_message, "tool_calls") and last_message.tool_calls:
         return "tools"
     return END
+
+
+
 
 
 
@@ -95,7 +100,8 @@ async def stream_chat(message: str, thread_id: str = "1", user_id: str = "unknow
     ):
         if stream_type == "messages":
             msg_chunk, metadata = payload
-            if msg_chunk.content:
+            # Only stream AIMessages to the user, ignore ToolMessages and HumanMessages
+            if isinstance(msg_chunk, AIMessage) and msg_chunk.content:
                 content = msg_chunk.content
                 if isinstance(content, list):
                  
@@ -108,7 +114,7 @@ async def stream_chat(message: str, thread_id: str = "1", user_id: str = "unknow
                     
                 if content_str:
                     full_response += content_str
-                    yield f"data: {content_str}\n\n"
+                    yield content_str
                 await asyncio.sleep(0.01)
 
     AvbodhStepLogger.log_final_response(thread_id, user_id, full_response)

@@ -38,7 +38,9 @@ class Dependencies:
         
         if cls._chat_model is None:
             api_key = settings.GROQ_API_KEY
-            cls._chat_model = ChatModelFactory.get_method("ollama" , {})
+            cls._chat_model = ChatModelFactory.get_method("ollama" , {
+                
+            })
             
         return cls._chat_model
 
@@ -86,3 +88,14 @@ class Dependencies:
             })
             
         return await AvbodhMCPClientFactory.get_tools(user_id, enabled_connectors)
+
+    _bound_models_cache = {}
+
+    @classmethod
+    async def get_bound_model(cls, user_id: str):
+        if user_id not in cls._bound_models_cache:
+            chat_model = cls.get_chat_model()
+            tools = await cls.get_mcp_tools(user_id)
+            cls._bound_models_cache[user_id] = chat_model.bind_tools(tools)
+        return cls._bound_models_cache[user_id]
+
