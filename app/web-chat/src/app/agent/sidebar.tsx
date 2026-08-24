@@ -1,3 +1,5 @@
+'use client';
+
 import { Plus, MessageSquare, User2 } from 'lucide-react';
 import {
   Sidebar as SidebarPrimitive,
@@ -12,7 +14,11 @@ import {
   SidebarMenuButton,
   SidebarTrigger,
 } from '@/components/ui/sidebar';
+import { useChatStore } from '@/store/chat';
+
 export function Sidebar() {
+  const createNewChat = useChatStore((s) => s.createNewChat);
+
   return (
     
     <SidebarPrimitive variant="sidebar" collapsible="icon" className="bg-[#111111] border-r border-white/10">
@@ -22,7 +28,11 @@ export function Sidebar() {
             <SidebarTrigger className="ml-0.5 text-muted-foreground hover:text-foreground" />
           </SidebarMenuItem>
           <SidebarMenuItem className="mt-2">
-            <SidebarMenuButton tooltip="New Chat" className="font-medium">
+            <SidebarMenuButton 
+              onClick={createNewChat} 
+              tooltip="New Chat" 
+              className="font-medium hover:bg-white/10 hover:text-white transition-colors"
+            >
               <Plus className="w-4 h-4" />
               <span>New Chat</span>
             </SidebarMenuButton>
@@ -34,12 +44,25 @@ export function Sidebar() {
           <SidebarGroupLabel>Recent</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton>
-                  <MessageSquare className="w-4 h-4" />
-                  <span>Design chat layout...</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              {useChatStore((s) => s.recentChats).length === 0 ? (
+                <SidebarMenuItem>
+                  <SidebarMenuButton disabled>
+                    <span className="text-muted-foreground italic pl-2">No recent chats</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ) : (
+                useChatStore((s) => s.recentChats).map((chat) => (
+                  <SidebarMenuItem key={chat.id}>
+                    <SidebarMenuButton 
+                      onClick={() => useChatStore.getState().loadChat(chat.id)}
+                      isActive={useChatStore((s) => s.threadId) === chat.id}
+                    >
+                      <MessageSquare className="w-4 h-4" />
+                      <span>{chat.title}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

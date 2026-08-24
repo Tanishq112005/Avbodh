@@ -5,6 +5,9 @@ export const maxDuration = 30;
 
 export async function POST(req: Request) {
   try {
+    const { searchParams } = new URL(req.url);
+    const threadId = searchParams.get('thread_id') || '450015';
+
     const { messages } = await req.json();
     
     const lastMsg = messages[messages.length - 1];
@@ -13,7 +16,7 @@ export async function POST(req: Request) {
                           "";
 
     // Call our custom utility that hits {{CHAT_BOT}}/chat/stream
-    const response = await fetchChatBotStream(latestMessage, "450015");
+    const response = await fetchChatBotStream(latestMessage, threadId);
 
     if (!response.body) {
       return new Response("Empty response from Chat Bot", { status: 500 });

@@ -10,13 +10,41 @@ import { AgentMessage } from '@/components/agent-message';
 import { ThinkingIndicator } from '@/components/thinking';
 import { SidebarTrigger, useSidebar } from '@/components/ui/sidebar';
 import { getDynamicGreeting } from '@/lib/time';
+import { useChatStore } from '@/store/chat';
 
 import { motion, AnimatePresence } from 'framer-motion';
 
 export function ChatArea() {
+  const threadId = useChatStore((s) => s.threadId);
+  return <ChatAreaInner key={threadId} threadId={threadId} />;
+}
+
+function ChatAreaInner({ threadId }: { threadId: string }) {
+  const setHasMessages = useChatStore((s) => s.setHasMessages);
+  const addRecentChat = useChatStore((s) => s.addRecentChat);
+  const hasMessages = useChatStore((s) => s.hasMessages);
+
   const { messages, sendMessage, status, stop } = useChat({
-    transport: new TextStreamChatTransport({ api: '/api/chat' })
+    id: threadId,
+    transport: new TextStreamChatTransport({ api: `/api/chat?thread_id=${threadId}` })
   });
+
+  // Track when a chat gets its first message and save it to history
+  useEffect(() => {
+    if (messages.length > 0 && !hasMessages) {
+      setHasMessages(true);
+      
+      // Use the first user message as the title
+      const firstUserMsg = messages.find(m => m.role === 'user');
+      const textContent = firstUserMsg?.parts
+        ?.filter(p => p.type === 'text')
+        .map(p => (p as any).text)
+        .join('') || 'New Conversation';
+        
+      const title = textContent.length > 25 ? textContent.substring(0, 25) + '...' : textContent;
+      addRecentChat({ id: threadId, title });
+    }
+  }, [messages, hasMessages, threadId, setHasMessages, addRecentChat]);
 
   const [inputValue, setInputValue] = useState('');
   const [greeting, setGreeting] = useState('Avbodh AI');
