@@ -104,7 +104,7 @@ export function ChatArea() {
           
           {/* Extra space on the left as requested by user to push chat right */}
           {isNewChat && isSidebarOpen && (
-            <div className="hidden md:block w-[12rem] shrink-[5] transition-all duration-300" />
+            <div className="hidden md:block w-[0rem] shrink-[5] transition-all duration-300" />
           )}
 
           <div className="pointer-events-auto w-[94%] sm:w-[86%] md:w-[72%] lg:w-[68%] lg:max-w-3xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
