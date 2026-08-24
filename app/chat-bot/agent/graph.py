@@ -13,9 +13,6 @@ from avbodh_tools import AvbodhStepLogger
 
 
 
-
-
-
 def custom_tools_condition(state: ChatBotStateSpace):
     messages = state.get("message", [])
     if not messages:
@@ -24,10 +21,6 @@ def custom_tools_condition(state: ChatBotStateSpace):
     if hasattr(last_message, "tool_calls") and last_message.tool_calls:
         return "tools"
     return END
-
-
-
-
 
 
 
@@ -49,6 +42,7 @@ async def build_chat_graph(user_id: str):
 
     memory = MemorySaver()
     return g.compile(checkpointer=memory)   
+
 
 
 
@@ -128,3 +122,6 @@ async def stream_chat(message: str, thread_id: str = "1", user_id: str = "unknow
         await rabbitmq_client.publish_to_exchange("chat_events_exchange", payload)
     except Exception as e:
         print(f"Failed to publish to RabbitMQ: {e}")
+        
+        
+        
