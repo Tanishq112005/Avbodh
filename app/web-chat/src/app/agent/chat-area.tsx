@@ -8,7 +8,7 @@ import { ChatInput } from '@/components/chat-input';
 import { UserMessage } from '@/components/user-message';
 import { AgentMessage } from '@/components/agent-message';
 import { ThinkingIndicator } from '@/components/thinking';
-import { SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarTrigger, useSidebar } from '@/components/ui/sidebar';
 import { getDynamicGreeting } from '@/lib/time';
 
 import { motion, AnimatePresence } from 'framer-motion';
@@ -20,6 +20,10 @@ export function ChatArea() {
 
   const [inputValue, setInputValue] = useState('');
   const [greeting, setGreeting] = useState('Avbodh AI');
+  
+  // Use Shadcn UI hook directly instead of Zustand
+  const { state, isMobile } = useSidebar();
+  const isSidebarOpen = state === 'expanded' && !isMobile;
 
   const submitForm = (e: React.FormEvent) => {
     e.preventDefault();
@@ -96,8 +100,14 @@ export function ChatArea() {
         {/* Full-width docked background gradient */}
         <div className={`absolute inset-x-0 bottom-0 h-32 md:h-40 bg-gradient-to-t from-[#151515] via-[#151515]/80 to-transparent pointer-events-none transition-opacity duration-700 ${isNewChat ? 'opacity-0' : 'opacity-100'} z-0`} />
         
-        <div className={`relative z-10 flex-1 flex flex-col w-full transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${isNewChat ? 'justify-center items-center pb-[10vh] md:pb-[15vh]' : 'justify-end pb-2 md:pb-4'}`}>
-          <div className="pointer-events-auto w-full max-w-3xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
+        <div className={`relative z-10 flex-1 flex flex-row w-full transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${isNewChat ? 'items-center pb-[10vh] md:pb-[15vh]' : 'items-end pb-2 md:pb-4'}`}>
+          
+          {/* Extra space on the left as requested by user to push chat right */}
+          {isNewChat && isSidebarOpen && (
+            <div className="hidden md:block w-[12rem] shrink-[5] transition-all duration-300" />
+          )}
+
+          <div className="pointer-events-auto w-[94%] sm:w-[86%] md:w-[72%] lg:w-[68%] lg:max-w-3xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
             <AnimatePresence mode="popLayout">
               {isNewChat && (
                 <motion.div
@@ -125,7 +135,6 @@ export function ChatArea() {
                 stop={stop}
               />
               
-              {/* Optional: Add suggestion pills just for the empty state to match Claude perfectly */}
               <AnimatePresence>
                 {isNewChat && (
                   <motion.div 
@@ -140,7 +149,7 @@ export function ChatArea() {
                         key={pill} 
                         type="button"
                         onClick={() => setInputValue(`Help me ${pill.toLowerCase()}`)}
-                        className="px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-border/50 bg-[#151515] hover:bg-muted text-xs md:text-sm text-muted-foreground transition-colors flex items-center gap-2 whitespace-nowrap"
+                        className="px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-border/50 bg-[#111111] hover:bg-muted text-xs md:text-sm text-muted-foreground transition-colors flex items-center gap-2 whitespace-nowrap"
                       >
                         {pill}
                       </button>

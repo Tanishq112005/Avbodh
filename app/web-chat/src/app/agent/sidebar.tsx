@@ -12,10 +12,10 @@ import {
   SidebarMenuButton,
   SidebarTrigger,
 } from '@/components/ui/sidebar';
-
 export function Sidebar() {
   return (
-    <SidebarPrimitive variant="inset" collapsible="icon" className="bg-[#111111] border-r border-white/10">
+    
+    <SidebarPrimitive variant="sidebar" collapsible="icon" className="bg-[#111111] border-r border-white/10">
       <SidebarHeader className="pt-4 pb-0">
         <SidebarMenu>
           <SidebarMenuItem>
@@ -29,7 +29,6 @@ export function Sidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Recent</SidebarGroupLabel>
@@ -45,11 +44,10 @@ export function Sidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton>
+            <SidebarMenuButton tooltip="User Options">
               <User2 className="w-4 h-4" />
               <span>User Options</span>
             </SidebarMenuButton>

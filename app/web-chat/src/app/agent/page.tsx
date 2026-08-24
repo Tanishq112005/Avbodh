@@ -1,5 +1,3 @@
-'use client';
-
 import { Sidebar } from './sidebar';
 import { ChatArea } from './chat-area';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
