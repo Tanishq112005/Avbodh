@@ -1,92 +1,46 @@
 'use client';
 
-import { Plus, MessageSquare, User2 } from 'lucide-react';
+import { User2 } from 'lucide-react';
 import {
   Sidebar as SidebarPrimitive,
-  SidebarHeader,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarGroupContent,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { useChatStore } from '@/store/chat';
 import { useEffect } from 'react';
+import { SidebarHeader } from './SidebarHeader';
+import { SidebarHistory } from './SidebarHistory';
 
 export function Sidebar() {
   const createNewChat = useChatStore((s) => s.createNewChat);
   const fetchRecentChats = useChatStore((s) => s.fetchRecentChats);
   const recentChats = useChatStore((s) => s.recentChats);
   const activeThreadId = useChatStore((s) => s.threadId);
+  const loadChat = useChatStore((s) => s.loadChat);
 
   useEffect(() => {
     fetchRecentChats();
   }, [fetchRecentChats]);
 
   return (
-    
-    <SidebarPrimitive variant="sidebar" collapsible="icon" className="bg-[#111111] border-r border-white/10">
-      {/* =====================================================
-          HEADER
-      ===================================================== */}
-
-      <SidebarHeader className="pt-4 pb-0">
-        <SidebarMenu>
-
-          <SidebarMenuItem>
-            <SidebarTrigger className="ml-0.5 text-muted-foreground hover:text-foreground" />
-          </SidebarMenuItem>
-
-          <SidebarMenuItem className="mt-2">
-            <SidebarMenuButton 
-              onClick={createNewChat} 
-              tooltip="New Chat" 
-              className="font-medium hover:bg-white/10 hover:text-white transition-colors"
-            >
-              <Plus className="w-4 h-4" />
-              <span>New Chat</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-
-        </SidebarMenu>
-      </SidebarHeader>
-
-      {/* =====================================================
-          CONTENT
-      ===================================================== */}
+    <SidebarPrimitive
+      variant="sidebar"
+      collapsible="icon"
+      className="bg-[#111111] border-r border-white/10"
+    >
+      <SidebarHeader createNewChat={createNewChat} />
 
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Recent</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {recentChats.length === 0 ? (
-                <SidebarMenuItem>
-                  <SidebarMenuButton disabled>
-                    <span className="text-muted-foreground italic pl-2">No recent chats</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ) : (
-                recentChats.map((chat) => (
-                  <SidebarMenuItem key={chat.id}>
-                    <SidebarMenuButton 
-                      onClick={() => useChatStore.getState().loadChat(chat.id)}
-                      isActive={activeThreadId === chat.id}
-                    >
-                      <MessageSquare className="w-4 h-4" />
-                      <span>{chat.title}</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))
-              )}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        <SidebarHistory
+          recentChats={recentChats}
+          activeThreadId={activeThreadId}
+          loadChat={loadChat}
+        />
       </SidebarContent>
+
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>

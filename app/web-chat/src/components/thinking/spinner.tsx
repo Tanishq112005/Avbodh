@@ -9,7 +9,9 @@ export function Spinner() {
       </div>
       <div className="flex items-center gap-2 h-8">
         <Loader2 className="w-4 h-4 text-primary animate-spin" />
-        <span className="text-sm text-muted-foreground animate-pulse">Thinking...</span>
+        <span className="text-sm text-muted-foreground animate-pulse">
+          Thinking...
+        </span>
       </div>
     </div>
   );

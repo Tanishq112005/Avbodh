@@ -4,31 +4,27 @@ import { cookies } from 'next/headers';
 
 export async function GET() {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('accessToken')?.value;
-    
+    const token = (await cookies()).get('accessToken')?.value;
     const response = await fetchChatHistory(token);
-    const data = await response.json();
-    
-    const nextResponse = NextResponse.json(data);
-    
-    const newAccessToken = response.headers.get('x-new-access-token');
-    if (newAccessToken) {
+    const nextResponse = NextResponse.json(await response.json());
+
+    const newToken = response.headers.get('x-new-access-token');
+    if (newToken) {
       nextResponse.cookies.set({
         name: 'accessToken',
-        value: newAccessToken,
+        value: newToken,
         httpOnly: true,
         path: '/',
-        sameSite: 'strict'
+        sameSite: 'strict',
       });
     }
-    
+
     return nextResponse;
   } catch (error: any) {
-    console.error("HISTORY API ERROR:", error);
+    console.error('HISTORY API ERROR:', error);
     return NextResponse.json(
-      { error: error.message || "Failed to fetch history" },
-      { status: 500 }
+      { error: error.message || 'Failed to fetch history' },
+      { status: 500 },
     );
   }
 }
