@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { ApiError } from '@avbodh/typescript';
-import { AUTHSERVICEURL, JWT_SECERTS } from '../config/env';
+import { AUTHSERVICEURL, JWT_SECERTS, INTERNAL_API_SECRET } from '../config/env';
 export const verifyJwtMiddleware = async (
   req: Request,
   res: Response,
@@ -41,7 +41,10 @@ export const verifyJwtMiddleware = async (
         const authServiceUrl = `${AUTHSERVICEURL}/refresh`;
         const refreshResponse = await fetch(authServiceUrl, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'X-Internal-Secret': INTERNAL_API_SECRET || 'dev-secret'
+          },
           body: JSON.stringify({ refreshToken }),
         });
 

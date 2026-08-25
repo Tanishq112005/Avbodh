@@ -1,4 +1,7 @@
-export async function fetchChatHistory(token: string | undefined) {
+export async function fetchChatHistory(
+  token: string | undefined,
+  refreshToken?: string | undefined,
+) {
   const gatewayUrl = process.env.CHAT_GATEWAY;
   if (!gatewayUrl)
     throw new Error('CHAT_GATEWAY environment variable is not configured.');
@@ -7,10 +10,12 @@ export async function fetchChatHistory(token: string | undefined) {
     'Content-Type': 'application/json',
   };
   if (token) headers['Authorization'] = `Bearer ${token}`;
+  if (refreshToken) headers['x-refresh-token'] = refreshToken;
 
   const response = await fetch(`${gatewayUrl}/chat/history`, {
     method: 'GET',
     headers,
+    credentials: 'include',
   });
 
   if (!response.ok) {

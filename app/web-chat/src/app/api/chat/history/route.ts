@@ -4,8 +4,10 @@ import { cookies } from 'next/headers';
 
 export async function GET() {
   try {
-    const token = (await cookies()).get('accessToken')?.value;
-    const response = await fetchChatHistory(token);
+    const cookieStore = await cookies();
+    const token = cookieStore.get('accessToken')?.value;
+    const refreshToken = cookieStore.get('refreshToken')?.value;
+    const response = await fetchChatHistory(token, refreshToken);
     const nextResponse = NextResponse.json(await response.json());
 
     const newToken = response.headers.get('x-new-access-token');

@@ -356,10 +356,18 @@ export class AuthController {
         JWT_SECRET_REFERSH_TOKEN as string
       );
 
+      console.log("[REFRESH DEBUG] decoded output:", decoded);
+
       const userId = decoded.id;
+      if (!userId) {
+         console.log("[REFRESH DEBUG] Failed because userId is missing from decoded token! decoded =", decoded);
+         return res.status(401).json(new ApiError('Refresh Token payload is invalid or expired'));
+      }
+
       const userDetails = await user.userDetailsThroughId(userId);
 
       if (userDetails.refresh_token != incomingRefreshToken) {
+        console.log("[REFRESH DEBUG] Failed because DB refresh_token does not match!");
         return res.status(401).json(new ApiError('Refresh Token is incorrect'));
       }
 
@@ -376,6 +384,7 @@ export class AuthController {
         }),
       );
     } catch (err: any) {
+      console.log("[REFRESH DEBUG] Caught error:", err);
       res.clearCookie('refreshToken');
       return res
         .status(401)

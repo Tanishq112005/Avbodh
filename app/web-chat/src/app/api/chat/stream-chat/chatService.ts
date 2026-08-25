@@ -4,7 +4,9 @@ import { cookies } from 'next/headers';
 export async function handleStreamChat(req: Request) {
   const { searchParams } = new URL(req.url);
   const threadId = searchParams.get('thread_id') || '450015';
-  const token = (await cookies()).get('accessToken')?.value;
+  const cookieStore = await cookies();
+  const token = cookieStore.get('accessToken')?.value;
+  const refreshToken = cookieStore.get('refreshToken')?.value;
 
   const { messages } = await req.json();
   const lastMsg = messages[messages.length - 1];
@@ -16,7 +18,7 @@ export async function handleStreamChat(req: Request) {
       .join('') ||
     '';
 
-  const response = await fetchChatBotStream(latestMessage, threadId, token);
+  const response = await fetchChatBotStream(latestMessage, threadId, token, refreshToken);
   if (!response.body) return new Response('Empty response', { status: 500 });
 
   const headers = new Headers({
