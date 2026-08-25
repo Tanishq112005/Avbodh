@@ -14,7 +14,7 @@ export function useChatArea(threadId: string) {
     id: threadId,
     messages: useChatStore.getState().threads[threadId] || [],
     transport: new TextStreamChatTransport({
-      api: `/api/chat?thread_id=${threadId}`,
+      api: `/api/chat/stream-chat?thread_id=${threadId}`,
     }),
   });
 

@@ -17,7 +17,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className={inter.className}>
+      <body className={inter.className} suppressHydrationWarning>
         <SidebarProvider defaultOpen>{children}</SidebarProvider>
         <Toaster position="top-center" duration={2000} richColors />
       </body>

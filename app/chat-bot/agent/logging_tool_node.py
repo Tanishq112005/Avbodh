@@ -11,6 +11,8 @@ class LoggingToolNode(ToolNode):
 
         last_msg = state["message"][-1]
         for tc in last_msg.tool_calls:
+            print(f"\n[TOOL CALL] LLM is using tool: {tc['name']}", flush=True)
+            print(f"[TOOL CALL] Arguments / Queries: {tc['args']}\n", flush=True)
             AvbodhStepLogger.log_tool_start(thread_id, user_id, tc["name"], tc["args"])
 
         start = time.perf_counter()
@@ -18,6 +20,7 @@ class LoggingToolNode(ToolNode):
         duration_ms = (time.perf_counter() - start) * 1000
 
         for msg in result["message"]:
+            print(f"[TOOL RESULT] Retrieved data for {getattr(msg, 'name', 'unknown')}: {str(msg.content)[:200]}...", flush=True)
             AvbodhStepLogger.log_tool_end(
                 thread_id, user_id, getattr(msg, "name", "unknown"),
                 duration_ms, str(msg.content),

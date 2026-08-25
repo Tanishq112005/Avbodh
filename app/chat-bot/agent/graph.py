@@ -66,7 +66,7 @@ async def stream_chat(message: str, thread_id: str = "1", user_id: str = "unknow
     if not messages_in_memory:
   
         try:
-            history_doc = await ChatHistoryService.get_synchronized_history(user_id)
+            history_doc = await ChatHistoryService.get_synchronized_thread_history(user_id, thread_id)
             threads = history_doc.get("threads", {})
             if thread_id in threads:
                 past_messages = threads[thread_id].get("messages", [])
