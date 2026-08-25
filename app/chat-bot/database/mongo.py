@@ -3,7 +3,7 @@ from uuid import UUID
 from datetime import datetime
 from avbodh_tools import AvbodhNoSqlClient
 from .models import User, ChatSession, ChatMessage
-from ...config.env import settings
+from config.env import settings
 
 
 

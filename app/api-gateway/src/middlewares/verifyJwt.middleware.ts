@@ -49,6 +49,8 @@ export const verifyJwtMiddleware = async (
         });
 
         if (!refreshResponse.ok) {
+          const errorText = await refreshResponse.text();
+          console.error(`[GATEWAY DEBUG] Auth service rejected refresh token! Status: ${refreshResponse.status}, Response:`, errorText);
           res
             .status(401)
             .json(
@@ -60,7 +62,7 @@ export const verifyJwtMiddleware = async (
         }
 
         const data = await refreshResponse.json();
-        const newAccessToken = data.accessToken;
+        const newAccessToken = data.data ? data.data.accessToken : data.accessToken;
 
         const newDecoded = jwt.verify(newAccessToken, secret) as any;
         (req as any).user = newDecoded;

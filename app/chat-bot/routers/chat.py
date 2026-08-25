@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from agent.graph import stream_chat
 from avbodh_tools import ApiResponse
 from avbodh_tools.utils.ApiError import ApiError
-from models.ChatBotRequest import ChatRequest
+from schemas.chat import ChatRequest
 from services.chat_history import ChatHistoryService
 
 # Define the FastAPI Router

@@ -2,7 +2,7 @@ from fastapi  import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse 
 from avbodh_tools import ApiResponse, ApiError
-from router.chatBot import router as chat_router
+from routers.chat import router as chat_router
 from config.dependencies import Dependencies
 from middleware.internal_auth import InternalAuthMiddleware
 
