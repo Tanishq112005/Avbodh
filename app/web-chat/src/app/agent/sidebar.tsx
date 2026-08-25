@@ -20,6 +20,8 @@ import { useEffect } from 'react';
 export function Sidebar() {
   const createNewChat = useChatStore((s) => s.createNewChat);
   const fetchRecentChats = useChatStore((s) => s.fetchRecentChats);
+  const recentChats = useChatStore((s) => s.recentChats);
+  const activeThreadId = useChatStore((s) => s.threadId);
 
   useEffect(() => {
     fetchRecentChats();
@@ -28,11 +30,17 @@ export function Sidebar() {
   return (
     
     <SidebarPrimitive variant="sidebar" collapsible="icon" className="bg-[#111111] border-r border-white/10">
+      {/* =====================================================
+          HEADER
+      ===================================================== */}
+
       <SidebarHeader className="pt-4 pb-0">
         <SidebarMenu>
+
           <SidebarMenuItem>
             <SidebarTrigger className="ml-0.5 text-muted-foreground hover:text-foreground" />
           </SidebarMenuItem>
+
           <SidebarMenuItem className="mt-2">
             <SidebarMenuButton 
               onClick={createNewChat} 
@@ -43,25 +51,31 @@ export function Sidebar() {
               <span>New Chat</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
+
         </SidebarMenu>
       </SidebarHeader>
+
+      {/* =====================================================
+          CONTENT
+      ===================================================== */}
+
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Recent</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {useChatStore((s) => s.recentChats).length === 0 ? (
+              {recentChats.length === 0 ? (
                 <SidebarMenuItem>
                   <SidebarMenuButton disabled>
                     <span className="text-muted-foreground italic pl-2">No recent chats</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ) : (
-                useChatStore((s) => s.recentChats).map((chat) => (
+                recentChats.map((chat) => (
                   <SidebarMenuItem key={chat.id}>
                     <SidebarMenuButton 
                       onClick={() => useChatStore.getState().loadChat(chat.id)}
-                      isActive={useChatStore((s) => s.threadId) === chat.id}
+                      isActive={activeThreadId === chat.id}
                     >
                       <MessageSquare className="w-4 h-4" />
                       <span>{chat.title}</span>

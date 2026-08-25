@@ -33,6 +33,12 @@ export function LoginForm({
     try {
       setLoading(true)
       const data = await authService.login({ email, password, remberMe })
+      
+      // Save the access token to cookies so Next.js API routes can read it!
+      if (data && data.data && data.data.accessToken) {
+        document.cookie = `accessToken=${data.data.accessToken}; path=/; max-age=86400; SameSite=Lax`;
+      }
+      
       setUser({ id: "1", name: "User", email: email }) 
       toast.success("Successfully logged in!")
       router.push("/agent")

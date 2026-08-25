@@ -4,7 +4,7 @@ import React from 'react';
 
 export default function LoginPage() {
   return (
-    <div className="grid min-h-screen lg:grid-cols-2 bg-[#111111] text-white selection:bg-indigo-500/30">
+    <div className="grid min-h-screen w-full lg:grid-cols-2 bg-[#111111] text-white selection:bg-indigo-500/30">
       <div className="flex flex-col p-6 md:p-10 lg:p-16 z-10 relative h-screen overflow-y-auto">
         <div className="absolute top-8 left-8 md:top-10 md:left-12 flex items-center gap-2">
           <a href="#" className="flex items-center gap-2 font-bold text-xl tracking-tight">

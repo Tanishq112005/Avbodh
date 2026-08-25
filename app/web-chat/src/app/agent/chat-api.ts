@@ -1,20 +1,23 @@
-export async function fetchChatBotStream(message: string, thread_id: string = "45") {
-  const chatBotUrl = process.env.CHAT_BOT;
+export async function fetchChatBotStream(message: string, thread_id: string, token: string | undefined) {
+  const gatewayUrl = process.env.CHAT_GATEWAY;
   
-  if (!chatBotUrl) {
-    throw new Error("CHAT_BOT environment variable is not configured.");
+  if (!gatewayUrl) {
+    throw new Error("CHAT_GATEWAY environment variable is not configured.");
   }
 
-  const response = await fetch(`${chatBotUrl}/chat/stream`, {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+
+  // Add the JWT token if available. The API gateway will verify this
+  // and then inject the X-User-Id and X-Internal-Secret for Python!
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  const response = await fetch(`${gatewayUrl}/chat/stream`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      // Include the internal secret so the ChatBot allows the request
-      // bypassing the API Gateway!
-      'x-internal-secret': 'hello',
-      // The Python backend strictly requires a user ID header
-      'x-user-id': 'test-user-123'
-    },
+    headers,
     body: JSON.stringify({
       message,
       thread_id,
@@ -23,26 +26,31 @@ export async function fetchChatBotStream(message: string, thread_id: string = "4
 
   if (!response.ok) {
     const errorText = await response.text();
+    console.error("GATEWAY REJECTED STREAM REQUEST:", response.status, errorText);
     throw new Error(`Chat API error (${response.status}): ${errorText}`);
   }
 
   return response;
 }
 
-export async function fetchChatHistory() {
-  const chatBotUrl = process.env.CHAT_BOT;
+export async function fetchChatHistory(token: string | undefined) {
+  const gatewayUrl = process.env.CHAT_GATEWAY;
   
-  if (!chatBotUrl) {
-    throw new Error("CHAT_BOT environment variable is not configured.");
+  if (!gatewayUrl) {
+    throw new Error("CHAT_GATEWAY environment variable is not configured.");
   }
 
-  const response = await fetch(`${chatBotUrl}/chat/history`, {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  const response = await fetch(`${gatewayUrl}/chat/history`, {
     method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-internal-secret': 'hello',
-      'x-user-id': 'test-user-123'
-    }
+    headers
   });
 
   if (!response.ok) {
@@ -50,5 +58,5 @@ export async function fetchChatHistory() {
     throw new Error(`History API error (${response.status}): ${errorText}`);
   }
 
-  return response.json();
+  return response;
 }
