@@ -2,7 +2,9 @@
   "name": "@avbodh/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+  "dev": "concurrently \"nx run-many -t serve\" \"cd app/chat-bot && poetry run uvicorn main:app --reload --port 8000\" \"cd app/chat-bot && poetry run python -u worker.py\""
+},
   "private": true,
   "devDependencies": {
     "@eslint/js": "^9.8.0",
@@ -32,6 +34,7 @@
     "@types/react-dom": "^19.0.0",
     "@types/ws": "^8.18.1",
     "@vitejs/plugin-react": "^6.0.0",
+    "concurrently": "^10.0.5",
     "esbuild": "^0.27.0",
     "eslint": "^9.8.0",
     "eslint-config-prettier": "^10.0.0",

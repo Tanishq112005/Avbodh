@@ -1,14 +1,17 @@
 import { create } from 'zustand';
+import { Message } from 'ai';
 
 export interface RecentChat {
   id: string;
   title: string;
+  updatedAt: number;
 }
 
 interface ChatState {
   threadId: string;
   hasMessages: boolean;
   recentChats: RecentChat[];
+  threads: Record<string, Message[]>;
   setHasMessages: (val: boolean) => void;
   addRecentChat: (chat: RecentChat) => void;
   setRecentChats: (chats: RecentChat[]) => void;
@@ -21,9 +24,9 @@ export const useChatStore = create<ChatState>((set, get) => ({
   threadId: typeof crypto !== 'undefined' ? crypto.randomUUID() : 'default-thread',
   hasMessages: false,
   recentChats: [],
+  threads: {},
   setHasMessages: (val) => set({ hasMessages: val }),
   addRecentChat: (chat) => set((state) => {
-    // Avoid duplicates
     if (state.recentChats.some(c => c.id === chat.id)) return state;
     return { recentChats: [chat, ...state.recentChats] };
   }),
@@ -33,16 +36,55 @@ export const useChatStore = create<ChatState>((set, get) => ({
       const res = await fetch('/api/chat/history');
       if (res.ok) {
         const json = await res.json();
-        // Assume json.data is a list of chat objects from Python
-        if (json.data && Array.isArray(json.data)) {
-          // Map backend format to frontend RecentChat format
-          const formattedChats = json.data.map((chat: any) => ({
-            id: chat.thread_id || chat.id || chat._id,
-            title: chat.title || 'Previous Conversation'
-          })).filter((c: any) => c.id);
+        const threadsDict = json.data?.threads || {};
+        
+        const formattedChats: RecentChat[] = [];
+        const threadsData: Record<string, Message[]> = {};
+
+        for (const [threadId, threadInfo] of Object.entries<any>(threadsDict)) {
+          const messages = threadInfo.messages || [];
+          const updatedDate = threadInfo.updated_date ? new Date(threadInfo.updated_date).getTime() : 0;
           
-          set({ recentChats: formattedChats });
+          let title = "New Conversation";
+          const formattedMessages: Message[] = [];
+          
+          if (messages.length > 0) {
+            const firstMsg = messages[0].human_response || "";
+            title = firstMsg.length > 25 ? firstMsg.substring(0, 25) + '...' : firstMsg;
+            if (!title.trim()) title = "New Conversation";
+            
+            // Format messages for the AI SDK v4
+            messages.forEach((msg: any, i: number) => {
+              if (msg.human_response) {
+                formattedMessages.push({
+                  id: `${threadId}-user-${i}`,
+                  role: 'user',
+                  parts: [{ type: 'text', text: msg.human_response }]
+                } as any);
+              }
+              if (msg.ai_response) {
+                formattedMessages.push({
+                  id: `${threadId}-ai-${i}`,
+                  role: 'assistant',
+                  parts: [{ type: 'text', text: msg.ai_response }]
+                } as any);
+              }
+            });
+          }
+          
+          formattedChats.push({
+            id: threadId,
+            title,
+            updatedAt: updatedDate
+          });
+          
+          threadsData[threadId] = formattedMessages;
         }
+
+        // Sort by updated_date descending
+        formattedChats.sort((a, b) => b.updatedAt - a.updatedAt);
+        
+        set({ recentChats: formattedChats, threads: threadsData });
       }
     } catch (e) {
       console.error("Failed to fetch recent chats:", e);
@@ -50,8 +92,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   },
   loadChat: (id) => set({ threadId: id, hasMessages: true }),
   createNewChat: () => {
-    const { hasMessages, threadId } = get();
-    // If we haven't typed anything yet, just keep the current empty thread
+    const { hasMessages } = get();
     if (!hasMessages) return;
     set({ threadId: crypto.randomUUID(), hasMessages: false });
   },

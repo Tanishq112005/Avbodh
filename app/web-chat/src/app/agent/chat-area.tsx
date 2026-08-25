@@ -26,6 +26,7 @@ function ChatAreaInner({ threadId }: { threadId: string }) {
 
   const { messages, sendMessage, status, stop } = useChat({
     id: threadId,
+    messages: useChatStore.getState().threads[threadId] || [],
     transport: new TextStreamChatTransport({ api: `/api/chat?thread_id=${threadId}` })
   });
 
@@ -42,7 +43,7 @@ function ChatAreaInner({ threadId }: { threadId: string }) {
         .join('') || 'New Conversation';
         
       const title = textContent.length > 25 ? textContent.substring(0, 25) + '...' : textContent;
-      addRecentChat({ id: threadId, title });
+      addRecentChat({ id: threadId, title, updatedAt: Date.now() });
     }
   }, [messages, hasMessages, threadId, setHasMessages, addRecentChat]);
 
