@@ -2,6 +2,7 @@ import {
   OTP_EXPIRE_TIME,
   GOOGLE_CLIENT_ID,
   JWT_SECRET_REFERSH_TOKEN,
+  JWT_TEMP_EXPIRES_IN_REFERSH_TOKEN,
 } from '../config/env';
 import { OAuth2Client } from 'google-auth-library';
 import crypto from 'crypto';
@@ -123,7 +124,7 @@ export class AuthController {
 
       const refreshToken = generateRefershToken(
         { id: informationOfUser.id },
-        '1d',
+        JWT_TEMP_EXPIRES_IN_REFERSH_TOKEN || '1d',
       );
       await user.updateRefershToken(email, refreshToken);
 
@@ -315,7 +316,7 @@ export class AuthController {
       if (remberMe) {
         refreshToken = generateRefershToken(jwtPayloadRefershToken, '30d');
       } else {
-        refreshToken = generateRefershToken(jwtPayloadRefershToken, '1d');
+        refreshToken = generateRefershToken(jwtPayloadRefershToken, JWT_TEMP_EXPIRES_IN_REFERSH_TOKEN || '1d');
       }
 
       await user.updateRefershToken(email, refreshToken);
@@ -453,7 +454,7 @@ export class AuthController {
       const accessToken = generateAccessToken(jwtPayload);
       const refreshToken = generateRefershToken(
         { id: informationOfUser.id },
-        '1d',
+        JWT_TEMP_EXPIRES_IN_REFERSH_TOKEN || '1d',
       );
 
       await user.updateRefershToken(email, refreshToken);

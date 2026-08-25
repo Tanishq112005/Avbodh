@@ -18,7 +18,7 @@ export function generateAccessToken(payload : jwtPayloadAccessToken){
 // generate the refersh token 
 export function generateRefershToken(payload : jwtPayloadRefershToken , expireTime : string){
      const options: jwt.SignOptions = {
-        expiresIn: parseInt(expireTime) , 
+        expiresIn: expireTime as jwt.SignOptions["expiresIn"], 
         algorithm: jwtConfigRefershToken.algorithm as jwt.Algorithm
     };
     

@@ -81,7 +81,14 @@ async def stream_chat(message: str, thread_id: str = "1", user_id: str = "unknow
         except Exception as e:
             print(f"Failed to load chat history for LLM context: {e}")
 
-    input_messages.append(HumanMessage(content=message))
+    # Injecting a strong reminder directly into the latest user turn.
+    # Smaller local models often ignore the system prompt for familiar entities due to attention degradation.
+    enhanced_message = (
+        f"{message}\n\n"
+        "[SYSTEM REMINDER: If the question above asks for any facts, names, dates, or real-world information, "
+        "YOU MUST CALL THE SEARCH TOOL. Do NOT guess the answer from your internal knowledge.]"
+    )
+    input_messages.append(HumanMessage(content=enhanced_message))
 
     full_response = ""
     async for stream_type, payload in chatBot.astream(
