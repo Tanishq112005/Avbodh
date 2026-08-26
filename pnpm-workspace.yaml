@@ -3,13 +3,13 @@ packages:
   - 'libs/*'
 autoInstallPeers: true
 allowBuilds:
-  '@prisma/engines': set this to true or false
-  bcrypt: false
-  esbuild: true
-  nx: true
-  prisma: false
-  unrs-resolver: false
-  '@swc/core': false
-  '@parcel/watcher': false
-  less: false
-  sharp: set this to true or false
+  - '@prisma/engines'
+  - 'bcrypt'
+  - 'esbuild'
+  - 'nx'
+  - 'prisma'
+  - 'unrs-resolver'
+  - '@swc/core'
+  - '@parcel/watcher'
+  - 'less'
+  - 'sharp'
