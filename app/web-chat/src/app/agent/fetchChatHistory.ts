@@ -16,6 +16,7 @@ export async function fetchChatHistory(
     method: 'GET',
     headers,
     credentials: 'include',
+    cache: 'no-store',
   });
 
   if (!response.ok) {

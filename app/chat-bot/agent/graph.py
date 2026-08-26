@@ -57,6 +57,7 @@ def prepare_input_messages(message: str, input_messages: list) -> list:
     return input_messages
 
 async def publish_chat_event(thread_id: str, user_id: str, message: str, full_response: str):
+    import json
     try:
         rabbitmq_client = Dependencies.get_rabbitmq_client()
         payload = {
@@ -65,6 +66,15 @@ async def publish_chat_event(thread_id: str, user_id: str, message: str, full_re
             "last_message": message,
             "assistant_response": full_response
         }
+        
+        # Save to Redis as pending state
+        try:
+            redis_client = Dependencies.get_redis_client()
+            redis_key = f"chat_state:user:{user_id}:{thread_id}"
+            await redis_client.set(redis_key, json.dumps(payload))
+        except Exception as redis_e:
+            print(f"Failed to save pending state to Redis: {redis_e}")
+
         await rabbitmq_client.publish_to_exchange("chat_events_exchange", payload)
     except Exception as e:
         print(f"Failed to publish to RabbitMQ: {e}")

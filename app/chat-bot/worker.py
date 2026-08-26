@@ -14,7 +14,8 @@ async def process_mongo_write(data: dict):
         await save_chat_to_mongo(data, mongodb_uri)
         print("[Mongo Worker] Successfully saved to MongoDB.")
         redis_client = Dependencies.get_redis_client()
-        await redis_client.delete(f"chat_state:{data.get('thread_id')}")
+        redis_key = f"chat_state:user:{data.get('user_id')}:{data.get('thread_id')}"
+        await redis_client.delete(redis_key)
         
     except Exception as e:
         print(f"[Mongo Worker] Error processing mongo/redis sync: {e}")

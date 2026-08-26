@@ -18,6 +18,7 @@ export async function fetchChatBotStream(
     method: 'POST',
     headers,
     credentials: 'include',
+    cache: 'no-store',
     body: JSON.stringify({ message, thread_id }),
   });
 
