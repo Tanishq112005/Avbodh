@@ -1,0 +1,1 @@
+{"version":3,"file":"ApiError.js","sourceRoot":"","sources":["file:///A:/Projects/Avbodh/libs/typescript/src/utils/ApiError.ts"],"names":[],"mappings":";;;AAAA,MAAa,QAAQ;IAOjB,YACI,OAAO,GAAE,sBAAsB,EAC/B,MAAM,GAAG,EAAE;QAIX,IAAI,CAAC,OAAO,GAAG,KAAK,CAAE;QACtB,IAAI,CAAC,OAAO,GAAG,OAAO,CAAC;QACvB,IAAI,CAAC,MAAM,GAAG,MAAM,CAAC;IAEzB,CAAC;CACJ;AAlBD,4BAkBC"}
