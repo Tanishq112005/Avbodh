@@ -50,20 +50,25 @@ class ChatHistoryService:
             for key in keys:
                 state_data = await redis_client.get(key)
                 if state_data:
-                    chat = json.loads(state_data)
-                    thread_id = chat.get("thread_id")
-                    
-                    if not thread_id or (target_thread_id and thread_id != target_thread_id):
-                        continue
+                    chats = json.loads(state_data)
+                    # If it's a single dict, convert to list for uniform processing
+                    if isinstance(chats, dict):
+                        chats = [chats]
                         
-                    if thread_id not in mongo_doc["threads"]:
-                        mongo_doc["threads"][thread_id] = {"messages": []}
-                    
-                    mongo_doc["threads"][thread_id]["messages"].append({
-                        "human_response": chat.get("last_message", ""),
-                        "ai_response": chat.get("assistant_response", ""),
-                        "_is_pending": True
-                    })
+                    for chat in chats:
+                        thread_id = chat.get("thread_id")
+                        
+                        if not thread_id or (target_thread_id and thread_id != target_thread_id):
+                            continue
+                            
+                        if thread_id not in mongo_doc["threads"]:
+                            mongo_doc["threads"][thread_id] = {"messages": []}
+                        
+                        mongo_doc["threads"][thread_id]["messages"].append({
+                            "human_response": chat.get("last_message", ""),
+                            "ai_response": chat.get("assistant_response", ""),
+                            "_is_pending": True
+                        })
         except Exception as e:
             print(f"Failed to fetch from Redis: {e}")
 

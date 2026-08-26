@@ -67,11 +67,22 @@ async def publish_chat_event(thread_id: str, user_id: str, message: str, full_re
             "assistant_response": full_response
         }
         
-        # Save to Redis as pending state
+        # Save to Redis as pending state (append to list)
         try:
             redis_client = Dependencies.get_redis_client()
             redis_key = f"chat_state:user:{user_id}:{thread_id}"
-            await redis_client.set(redis_key, json.dumps(payload))
+            existing_data = await redis_client.get(redis_key)
+            
+            chats = []
+            if existing_data:
+                parsed = json.loads(existing_data)
+                if isinstance(parsed, list):
+                    chats = parsed
+                elif isinstance(parsed, dict):
+                    chats = [parsed]
+                    
+            chats.append(payload)
+            await redis_client.set(redis_key, json.dumps(chats))
         except Exception as redis_e:
             print(f"Failed to save pending state to Redis: {redis_e}")
 
