@@ -9,7 +9,7 @@ export function ChatMessageList({
 }: {
   messages: any[];
   status: string;
-  messagesEndRef: React.RefObject<HTMLDivElement>;
+  messagesEndRef: React.RefObject<HTMLDivElement | null>;
 }) {
   return (
     <div className="space-y-4 md:space-y-6">

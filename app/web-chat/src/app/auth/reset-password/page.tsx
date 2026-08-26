@@ -19,7 +19,9 @@ export default function ResetPasswordPage() {
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-sm">
-            <ResetPasswordForm />
+            <React.Suspense fallback={<div>Loading...</div>}>
+              <ResetPasswordForm />
+            </React.Suspense>
           </div>
         </div>
       </div>
