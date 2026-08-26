@@ -9,13 +9,6 @@
     "express": "5.2.1",
     "jsonwebtoken": "9.0.3"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "@nx/nx-win32-x64-msvc",
-      "@swc/core"
-    ]
-  },
   "main": "./main.js",
   "type": "commonjs"
 }

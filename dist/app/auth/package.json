@@ -14,13 +14,6 @@
     "redis": "6.2.0",
     "ws": "8.21.3"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "@nx/nx-win32-x64-msvc",
-      "@swc/core"
-    ]
-  },
   "main": "./main.js",
   "type": "commonjs"
 }

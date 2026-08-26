@@ -159,8 +159,9 @@ var app = (0, import_express.default)();
 var port = PORT ? Number(PORT) : 3e3;
 var host = HOST ?? "localhost";
 app.use((0, import_cors.default)({
-  origin: ["http://localhost:4200", "http://localhost:3000"],
-  // Add your frontend origins here
+  origin: (origin, callback) => {
+    callback(null, true);
+  },
   credentials: true
 }));
 app.use((0, import_cookie_parser.default)());

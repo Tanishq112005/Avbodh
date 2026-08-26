@@ -20,7 +20,9 @@ const host = HOST ?? 'localhost';
 
 // Middleware Setup
 app.use(cors({
-  origin: ['http://localhost:4200', 'http://localhost:3000'], // Add your frontend origins here
+  origin: (origin, callback) => {
+    callback(null, true); // Automatically allow the requesting origin
+  },
   credentials: true,
 }));
 app.use(cookieParser());
