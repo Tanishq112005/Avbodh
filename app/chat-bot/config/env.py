@@ -24,10 +24,13 @@ class Settings(BaseSettings):
     GROQ_API_KEY : str | None = None 
     HUGGINGFACEHUG_API_TOKEN: str 
     INTERNAL_API_SECRET: str | None = 'dev-secret'
+    OPENROUTER_API_KEY: str | None = None 
+    
     
     # MCP Connectors
     GITHUB_PAT: str | None = None
     TAVILY_API_KEY: str | None = None
+    
     
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
     

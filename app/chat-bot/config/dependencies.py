@@ -38,8 +38,8 @@ class Dependencies:
         
         if cls._chat_model is None:
             api_key = settings.GROQ_API_KEY
-            cls._chat_model = ChatModelFactory.get_method("ollama" , {
-               
+            cls._chat_model = ChatModelFactory.get_method("openrouter" , {
+               "access_key" : settings.OPENROUTER_API_KEY
             })
             
         return cls._chat_model

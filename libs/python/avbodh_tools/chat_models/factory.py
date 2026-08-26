@@ -5,6 +5,8 @@ from langchain_groq import ChatGroq
 from ..schemas.groq import GroqChatModelConfig
 from .groq import Groq
 from .ollama import Ollama
+from .openrouter import OpenRouter
+from ..schemas.openrouter import OpenRouterChatModelConfig
 class ChatModelFactory:
     
     @staticmethod
@@ -39,7 +41,14 @@ class ChatModelFactory:
             model.setModel() 
             
             return model.getModel() 
+        
+        elif model_type == "openrouter": 
+            validated_data = OpenRouterChatModelConfig(**config) 
+            model =  OpenRouter() 
+            api_key = validated_data.access_key 
+            model.setModel(uri=api_key)
             
+            return model.getModel() 
              
             
         

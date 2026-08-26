@@ -20,7 +20,8 @@ class LoggingToolNode(ToolNode):
         duration_ms = (time.perf_counter() - start) * 1000
 
         for msg in result["message"]:
-            print(f"[TOOL RESULT] Retrieved data for {getattr(msg, 'name', 'unknown')}: {str(msg.content)[:200]}...", flush=True)
+            safe_content = str(msg.content)[:200].encode('ascii', errors='replace').decode('ascii')
+            print(f"[TOOL RESULT] Retrieved data for {getattr(msg, 'name', 'unknown')}: {safe_content}...", flush=True)
             AvbodhStepLogger.log_tool_end(
                 thread_id, user_id, getattr(msg, "name", "unknown"),
                 duration_ms, str(msg.content),
