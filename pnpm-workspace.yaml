@@ -1,15 +1,3 @@
 packages:
   - 'app/*'
   - 'libs/*'
-autoInstallPeers: true
-allowBuilds:
-  - '@prisma/engines'
-  - 'bcrypt'
-  - 'esbuild'
-  - 'nx'
-  - 'prisma'
-  - 'unrs-resolver'
-  - '@swc/core'
-  - '@parcel/watcher'
-  - 'less'
-  - 'sharp'
