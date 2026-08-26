@@ -57,13 +57,7 @@
     "typescript-eslint": "^8.58.0",
     "vite": "^8.0.0"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "@nx/nx-win32-x64-msvc",
-      "@swc/core"
-    ]
-  },
+
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
     "@prisma/adapter-neon": "^7.9.1",
